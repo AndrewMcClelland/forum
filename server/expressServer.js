@@ -1,5 +1,8 @@
 "use strict";
 
+require('./error');
+require('./setup'); // sets up the database if required
+
 var express = require('express');
 var cp = require('cookie-parser');
 var bp = require('body-parser');
@@ -14,10 +17,7 @@ var PM = require('./util/PropertyManager');
 var dbr = require('./util/DBROW');
 var generator = require('./util/Generator');
 
-// sets up the database if required
-require('./setup');
-
-const PORT = PM.getConfigProperty(lit.PORT);
+const PORT = PM.getConfigProperty(lit.config.PORT);
 var server = express();
 
 // directories from which we serve css, js and assets statically
@@ -26,10 +26,10 @@ server.use('/js', express.static('../client/js'));
 server.use('/assets', express.static('../client/assets'));
 
 // imports all the required middleware to express
-server.use(cp(lit.SIMPLE_SECRET)); //simple secret is an example password
+server.use(cp(lit.sql.SIMPLE_SECRET)); //simple secret is an example password
 server.use(bp.json());
 
-var isInProduction = (PM.getConfigProperty(lit.PRODUCTION) === true);
+var isInProduction = (PM.getConfigProperty(lit.config.PRODUCTION) === true);
 
 // Set the templating engine to use Pug
 server.set('views', '../client/views');
@@ -43,9 +43,9 @@ server.set('view engine', 'pug');
 ** call, http://localhost:8080/search corresponds to the server.get('/search', ...) call etc
 */
 
-server.get(lit.ROOT_ROUTE, function(request, response) { // default link, delivers landing page
+server.get(lit.routes.ROOT, function(request, response) { // default link, delivers landing page
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE);
+        return response.redirect(lit.routes.LOGIN);
 
     response.render('index',{
         title: 'Home',
@@ -54,11 +54,15 @@ server.get(lit.ROOT_ROUTE, function(request, response) { // default link, delive
     });
 });
 
+<<<<<<< HEAD
 
 
 server.get(lit.QUESTION_ROUTE, function(request, response) { // question page, queried by id
+=======
+server.get(lit.routes.QUESTION, function(request, response) { // question page, queried by id
+>>>>>>> master
 	if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
@@ -74,9 +78,9 @@ server.get(lit.QUESTION_ROUTE, function(request, response) { // question page, q
 	});
 });
 
-server.get(lit.ABOUT_ROUTE, function(request, response) { //about page
+server.get(lit.routes.ABOUT, function(request, response) { //about page
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
 	response.render('about', {
         title: 'About',
@@ -85,9 +89,9 @@ server.get(lit.ABOUT_ROUTE, function(request, response) { //about page
     });
 });
 
-server.get(lit.NEW_ROUTE, function(request, response) { // place where new things can be added
+server.get(lit.routes.NEW, function(request, response) { // place where new things can be added
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 	response.render('new', {
         title: 'New Entry',
         scripts: ['new.js', 'pulse.js'],
@@ -95,9 +99,9 @@ server.get(lit.NEW_ROUTE, function(request, response) { // place where new thing
     });
 });
 
-server.get(lit.LIST_ROUTE, function(request, response) { //return the a default most recent list of questions
+server.get(lit.routes.LIST, function(request, response) { //return the a default most recent list of questions
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
 	response.render('list', {
         title: 'Questions',
@@ -106,9 +110,9 @@ server.get(lit.LIST_ROUTE, function(request, response) { //return the a default 
     });
 });
 
-server.get(lit.PROFILE_ROUTE, function(request, response) { //user home page
+server.get(lit.routes.PROFILE, function(request, response) { //user home page
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
 	if (!compare.isEmpty(request.query)) {
 		validator.validateUser(request).then(function() {
@@ -136,19 +140,19 @@ server.get(lit.PROFILE_ROUTE, function(request, response) { //user home page
 	}
 });
 
-server.get(lit.LOGIN_ROUTE, function(request, response) {
+server.get(lit.routes.LOGIN, function(request, response) {
 	if (compare.isEmpty(request.signedCookies))
         response.render('login', {
             title: 'Login',
             scripts: ['login.js']
         });
 	else
-		response.redirect(request.query.redirect ? request.query.redirect : lit.ROOT_ROUTE);
+		response.redirect(request.query.redirect ? request.query.redirect : lit.routes.ROOT);
 });
 
-server.get(lit.GUIDELINES_ROUTE, function(request, response) { // mock login page
+server.get(lit.routes.GUIDELINES, function(request, response) { // mock login page
 	if (compare.isEmpty(request.signedCookies))
-        response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 	else
 		response.render('guidelines', {
             title: 'Guidelines',
@@ -156,9 +160,9 @@ server.get(lit.GUIDELINES_ROUTE, function(request, response) { // mock login pag
         });
 });
 
-server.get(lit.DEV_ROUTE, function(request, response) {
+server.get(lit.routes.DEV, function(request, response) {
 	if (compare.isEmpty(request.signedCookies))
-		response.redirect(lit.LOGIN_ROUTE);
+		response.redirect(lit.routes.LOGIN);
 	else {
 		validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
 			response.render('dev', {
@@ -175,9 +179,9 @@ server.get(lit.DEV_ROUTE, function(request, response) {
 	}
 });
 
-server.get(lit.EVAL_ROUTE, function(request, response) { //allows evaluation of server side code from the client
+server.get(lit.routes.EVAL, function(request, response) { //allows evaluation of server side code from the client
 	if (compare.isEmpty(request.signedCookies))
-		response.redirect(lit.LOGIN_ROUTE);
+		response.redirect(lit.routes.LOGIN);
 	else {
 		validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
 			response.render('eval', {
@@ -194,9 +198,9 @@ server.get(lit.EVAL_ROUTE, function(request, response) { //allows evaluation of 
 	}
 });
 
-server.get(lit.HELP_ROUTE, function(request, response) {
+server.get(lit.routes.HELP, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
 	response.render('help', {
         title: 'Help',
@@ -205,9 +209,9 @@ server.get(lit.HELP_ROUTE, function(request, response) {
     });
 });
 
-server.get(lit.CLASS_ROUTE, function(request, response) {
+server.get(lit.routes.CLASS, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
     validator.validateItemExistence(request).then(function() {
         response.render('class', {
@@ -224,9 +228,9 @@ server.get(lit.CLASS_ROUTE, function(request, response) {
     });
 });
 
-server.get(lit.LINK_ROUTE, function(request, response) {
+server.get(lit.routes.LINK, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
     validator.validateItemExistence(request).then(function() {
         response.render('link', {
@@ -243,9 +247,9 @@ server.get(lit.LINK_ROUTE, function(request, response) {
     });
 });
 
-server.get(lit.REPORT_ROUTE, function(request, response) {
+server.get(lit.routes.REPORT, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
     response.render('reportModal', {
         title: 'Report :(',
@@ -254,9 +258,9 @@ server.get(lit.REPORT_ROUTE, function(request, response) {
     });
 });
 
-server.get(lit.SETTINGS_ROUTE, function(request, response) {
+server.get(lit.routes.SETTINGS, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
     response.render('settings', {
         title: 'Settings',
@@ -265,9 +269,9 @@ server.get(lit.SETTINGS_ROUTE, function(request, response) {
     });
 });
 
-server.get(lit.ADVANCED_SEARCH_ROUTE, function(request, response) {
+server.get(lit.routes.ADVANCED_SEARCH, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
+        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
     response.render('advanced', {
         title: 'Search',
@@ -282,7 +286,7 @@ server.get(lit.ADVANCED_SEARCH_ROUTE, function(request, response) {
 ** request to the corresponding link.
 */
 
-server.post(lit.LOGIN_ROUTE, function(request, response) {
+server.post(lit.routes.LOGIN, function(request, response) {
 	if (!request.body) {
 		response.send(false);
 		return;
@@ -300,9 +304,9 @@ server.post(lit.LOGIN_ROUTE, function(request, response) {
     });
 });
 
-server.post(lit.EVAL_ROUTE, function(request, response) {
+server.post(lit.routes.EVAL, function(request, response) {
 	if (compare.isEmpty(request.signedCookies))
-		response.redirect(lit.LOGIN_ROUTE);
+		response.redirect(lit.routes.LOGIN);
 	else {
 		validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
 			var env = new Environment(); // a new disposable execution environment
@@ -322,9 +326,9 @@ server.post(lit.EVAL_ROUTE, function(request, response) {
 	}
 });
 
-server.post(lit.LOGOUT_ROUTE, function(request, response) { // a place to post exclusively for logout requests
+server.post(lit.routes.LOGOUT, function(request, response) { // a place to post exclusively for logout requests
 	if (compare.isEmpty(request.signedCookies)) {
-		response.redirect(lit.LOGIN_ROUTE); //then there's nothing to sign out of
+		response.redirect(lit.routes.LOGIN); //then there's nothing to sign out of
 		return;
 	}
 
@@ -341,9 +345,9 @@ server.post(lit.LOGOUT_ROUTE, function(request, response) { // a place to post e
 	}
 });
 
-server.post(lit.ACTION_ROUTE, function(request, response) {
+server.post(lit.routes.ACTION, function(request, response) {
 	if (compare.isEmpty(request.signedCookies)){ // if not signed in, you can't vote
-		response.redirect(lit.LOGIN_ROUTE); //tell the client to tell the user they need to login
+		response.redirect(lit.routes.LOGIN); //tell the client to tell the user they need to login
 		return;
 	}
 	action.respond(request).then(function(res) {
@@ -357,9 +361,9 @@ server.post(lit.ACTION_ROUTE, function(request, response) {
 
 });
 
-server.post(lit.INFO_ROUTE, function(request, response) {
+server.post(lit.routes.INFO, function(request, response) {
 	if (compare.isEmpty(request.signedCookies)) { //if you're not signed in you can't get information
-		response.redirect(lit.LOGIN_ROUTE); // tell them to log in
+		response.redirect(lit.routes.LOGIN); // tell them to log in
 		return;
 	}
 	requestor.parseRequest(request).then(function(resultToReturn) {
