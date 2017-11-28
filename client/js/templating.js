@@ -27,7 +27,7 @@ var level1CommentTemplate = '<div class="col-sm-12" id="{6}" data-hasvoted="{7}"
                                 {8}\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                <a href="javascript: void 0;" onclick="$(\'#reportModal\').modal(\'show\')">Report</a>\
                                 </div>\
                                 {9}\
                                 <hr/>\
@@ -48,7 +48,7 @@ var level2CommentTemplate = '<div class="info-block comment-block media" id="{6}
                                 <div class="action-links">\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                <a href="javascript: void 0;" onclick="$(\'#reportModal\').modal(\'show\')">Report</a>\
                                 </div>\
                                 <hr />\
                             </div>';
@@ -78,7 +78,7 @@ var postTemplate = '<div class="col-sm-12" id="{10}" data-hasvoted="{11}" data-h
                             <a href="/question?id={8}">View</a>\
                             <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="$(\'#reportModal\').modal(\'show\')">Report</a>\
                         </div>\
                         {9}\
                         <hr>\
@@ -104,7 +104,7 @@ var linkTemplate = '<div class="col-sm-12" id="{10}" data-hasvoted="{11}" data-h
                             <a href="/link?id={8}">View</a>\
                             <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="$(\'#reportModal\').modal(\'show\')">Report</a>\
                         </div>\
                         {9}\
                         <hr>\
@@ -124,7 +124,7 @@ var classTemplate = '<div class="col-sm-12" id="{10}" data-hastype="class">\
                             <a href="/class?id={8}">View</a>\
                             <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="$(\'#reportModal\').modal(\'show\')">Report</a>\
                         </div>\
                         {9}\
                         <hr>\

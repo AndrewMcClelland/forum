@@ -128,7 +128,7 @@ server.get(lit.routes.PROFILE, function(request, response) { //user home page
         response.render('profile', {
             title: 'Profile',
             stylesheets: ['profile.css'],
-            scripts: ['templating.js', 'profile.js', 'pulse.js'],
+            scripts: ['templating.js', 'profile.js', 'pulse.js', 'reportModal.js'],
             nav: "search"
         })
 	}
@@ -238,17 +238,6 @@ server.get(lit.routes.LINK, function(request, response) {
             scripts: ['notFound.js'],
             nav: "search"
         });
-    });
-});
-
-server.get(lit.routes.REPORT, function(request, response) {
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
-    response.render('reportModal', {
-        title: 'Report :(',
-        scripts: ['reportModal.js'],
-
     });
 });
 
