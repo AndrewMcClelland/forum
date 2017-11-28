@@ -61,7 +61,7 @@ server.get(lit.routes.QUESTION, function(request, response) { // question page, 
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
             title: 'Question',
-            scripts: ['templating.js', 'question.js', 'pulse.js','reportModal.pug']
+            scripts: ['templating.js', 'question.js', 'pulse.js','reportModal.js']
         });
 	}).catch(function() {
         response.render('notFound', {
