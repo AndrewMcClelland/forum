@@ -54,13 +54,7 @@ server.get(lit.routes.ROOT, function(request, response) { // default link, deliv
     });
 });
 
-<<<<<<< HEAD
-
-
-server.get(lit.QUESTION_ROUTE, function(request, response) { // question page, queried by id
-=======
 server.get(lit.routes.QUESTION, function(request, response) { // question page, queried by id
->>>>>>> master
 	if (compare.isEmpty(request.signedCookies))
         return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
