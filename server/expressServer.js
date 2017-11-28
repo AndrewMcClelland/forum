@@ -11,6 +11,8 @@ var requestor = require('./util/requestResponder');
 var action = require('./util/actionResponder');
 var lit = require('./util/Literals.js');
 var PM = require('./util/PropertyManager');
+var dbr = require('./util/DBROW');
+var generator = require('./util/Generator');
 
 // sets up the database if required
 require('./setup');
@@ -52,6 +54,8 @@ server.get(lit.ROOT_ROUTE, function(request, response) { // default link, delive
     });
 });
 
+
+
 server.get(lit.QUESTION_ROUTE, function(request, response) { // question page, queried by id
 	if (compare.isEmpty(request.signedCookies))
         return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
@@ -59,7 +63,7 @@ server.get(lit.QUESTION_ROUTE, function(request, response) { // question page, q
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
             title: 'Question',
-            scripts: ['templating.js', 'question.js', 'pulse.js']
+            scripts: ['templating.js', 'question.js', 'pulse.js','reportModal.pug']
         });
 	}).catch(function() {
         response.render('notFound', {
@@ -97,7 +101,7 @@ server.get(lit.LIST_ROUTE, function(request, response) { //return the a default 
 
 	response.render('list', {
         title: 'Questions',
-        scripts: ['pulse.js', 'templating.js', 'list.js'],
+        scripts: ['pulse.js', 'templating.js', 'list.js', 'reportModal.js'],
         nav: "search"
     });
 });
@@ -111,13 +115,13 @@ server.get(lit.PROFILE_ROUTE, function(request, response) { //user home page
 			response.render('profile', {
                 title: 'Profile',
                 stylesheets: ['profile.css'],
-                scripts: ['templating.js', 'profile.js', 'pulse.js'],
+                scripts: ['templating.js', 'profile.js', 'pulse.js','reportModal.js'],
                 nav: "search"
             });
 		}, function() {
 		    response.render('notFound', {
                 title: 'Not Found',
-                scripts: ['notFound.js'],
+                scripts: ['notFound.js','reportModal.js'],
                 nav: "search"
 		    });
 		});
@@ -243,8 +247,10 @@ server.get(lit.REPORT_ROUTE, function(request, response) {
     if (compare.isEmpty(request.signedCookies))
         return response.redirect(lit.LOGIN_ROUTE + '?redirect=' + request.url);
 
-    response.render('report', {
-        title: 'Report :('
+    response.render('reportModal', {
+        title: 'Report :(',
+        scripts: ['reportModal.js'],
+
     });
 });
 
