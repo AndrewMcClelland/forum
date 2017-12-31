@@ -1,9 +1,9 @@
 "use strict"
 
 function submitItem() {
-    newContent = {
+    var newContent = {
         requested: "reportModal",
-        type: getPressed().replace('#', ''),
+        problemType: getPressed().replace('#', ''), // case: reportModal... reportModal.handle, don't close modal until success/failure is returned
         content: getContent(getPressed().replace('#', ''))
     };
 
@@ -16,9 +16,13 @@ function submitItem() {
 
     $(buttonName).prop('disabled', true);
 
-    var href = 'report';
+    var href = 'info';
 
     AJAXCall(href, newContent, false, onSuccessfulInsert);
+
+}
+function triggerReportModal(element) {
+    $('#reportModal').modal('show');
 
 }
 
@@ -29,7 +33,3 @@ function onSuccessfulInsert(data) {
         console.error('Error inserting new item');
 }
 
-function addReport()
-{
-
-}

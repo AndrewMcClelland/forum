@@ -27,11 +27,13 @@ var level1CommentTemplate = '<div class="col-sm-12" id="{6}" data-hasvoted="{7}"
                                 {8}\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="$(\'#reportModal\').modal(\'show\')">Report</a>\
+                                <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                                 </div>\
                                 {9}\
                                 <hr/>\
                              </div>';
+
+
 
 var level2CommentTemplate = '<div class="info-block comment-block media" id="{6}" data-hasvoted="{7}" data-hastype="comment">\
                                 <div style="display:inline-block">\

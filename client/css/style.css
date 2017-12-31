@@ -660,7 +660,7 @@ input[type=checkbox] {
 }
 
 
-input[type=checkbox]:before {
+input[type=checkbox]:before, input[type=radio]:before  {
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
   content: "";
@@ -674,7 +674,7 @@ input[type=checkbox]:before {
   box-sizing: border-box;
 }
 
-input[type=checkbox]:checked:before {
+input[type=checkbox]:checked:before, input[type=radio]:checked:before  {
   -ms-transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
@@ -684,17 +684,17 @@ input[type=checkbox]:checked:before {
   border-right-style: none
 }
 
-input[type=checkbox]:focus:before,
-input[type=checkbox]:hover:before{
+input[type=checkbox]:focus:before, input[type=radio]:focus:before
+                                     input[type=checkbox]:hover:before, input[type=radio]:hover:before {
   border-color: #FF9200;
 }
 
-input[type=checkbox]:checked:focus:before,
-input[type=checkbox]:checked:hover:before {
+input[type=checkbox]:checked:focus:before , input[type=radio]:checked:focus:before ,
+input[type=checkbox]:checked:hover:before,input[type=radio]:checked:hover:before {
   border-color: #FF9200;
 }
 
-input[type=checkbox]:after {
+input[type=checkbox]:after,input[type=radio]:after {
   content: "";
   position: absolute;
   top: -4px;
