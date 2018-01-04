@@ -16,6 +16,7 @@ html(lang='en')
     link(rel='stylesheet', href='../css/style.css')
     link(href='https://fonts.googleapis.com/css?family=Comfortaa:400,700&subset=cyrillic', rel='stylesheet')
     script(type='text/javascript', src='/js/common.js')
+    script(type='text/javascript', src='/js/reportModal.js')
     if stylesheets
       for stylesheet in stylesheets 
         link(rel='stylesheet', href='/css/' + stylesheet)
@@ -31,7 +32,6 @@ html(lang='en')
       else
         include includes/navbarWithMenu
       block content
-      include modals/feedbackModal
     footer
       .wrap.clearfix
         .menu-items
@@ -46,3 +46,7 @@ html(lang='en')
         .footer-logo
           a(href='https://engsoc.queensu.ca/society/itsupport/', target='_blank')
             img(src='../assets/ITTLogo.svg')
+    include modals/reportModal
+    include modals/feedbackModal
+    include modals/confirmed
+    include modals/failed
