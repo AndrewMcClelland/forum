@@ -20,7 +20,7 @@ var questionTemplate = '<div class="info-block row" id="{9}" data-hasvoted="{10}
                                 <div class="action-links">\
                                     <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                     <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                    <a href="javascript: void 0;"  onclick="$(\'#reportModal\').modal(\'show\')" >Report</a>\
+                                    <a href="javascript: void 0;" onclick="triggerReportModal(this)" >Report</a>\
                                 </div>\
                                 {8}\
                                 <div class="comment-button-wrap">\

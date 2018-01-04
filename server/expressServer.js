@@ -61,7 +61,7 @@ server.get(lit.routes.QUESTION, function(request, response) { // question page, 
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
             title: 'Question',
-            scripts: ['templating.js', 'question.js', 'pulse.js','reportModal.js']
+            scripts: ['templating.js', 'question.js', 'pulse.js']
         });
 	}).catch(function() {
         response.render('notFound', {
@@ -99,7 +99,7 @@ server.get(lit.routes.LIST, function(request, response) { //return the a default
 
 	response.render('list', {
         title: 'Questions',
-        scripts: ['pulse.js', 'templating.js', 'list.js', 'reportModal.js'],
+        scripts: ['pulse.js', 'templating.js', 'list.js'],
         nav: "search"
     });
 });
@@ -113,13 +113,13 @@ server.get(lit.routes.PROFILE, function(request, response) { //user home page
 			response.render('profile', {
                 title: 'Profile',
                 stylesheets: ['profile.css'],
-                scripts: ['templating.js', 'profile.js', 'pulse.js','reportModal.js'],
+                scripts: ['templating.js', 'profile.js', 'pulse.js'],
                 nav: "search"
             });
 		}, function() {
 		    response.render('notFound', {
                 title: 'Not Found',
-                scripts: ['notFound.js','reportModal.js'],
+                scripts: ['notFound.js'],
                 nav: "search"
 		    });
 		});
@@ -128,7 +128,7 @@ server.get(lit.routes.PROFILE, function(request, response) { //user home page
         response.render('profile', {
             title: 'Profile',
             stylesheets: ['profile.css'],
-            scripts: ['templating.js', 'profile.js', 'pulse.js', 'reportModal.js'],
+            scripts: ['templating.js', 'profile.js', 'pulse.js'],
             nav: "search"
         })
 	}
