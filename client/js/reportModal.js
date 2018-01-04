@@ -1,6 +1,6 @@
 "use strict"
 
-function submitItem() {
+function submitReport() {
     var newContent = {
         requested: "reportModal",
         problemType: getPressed().replace('#', ''), // case: reportModal... reportModal.handle, don't close modal until success/failure is returned
