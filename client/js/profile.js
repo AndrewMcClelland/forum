@@ -7,11 +7,11 @@
 
 var commentTemplate ='<div class ="col-sm-12" id="{4}" data-hasvoted="{5}" data-hastype="comment">\
                            <div style="display:inline-block">\
-                                <span class="thumbs-up pointer" tabindex="0">\
+                                <span class="thumbs-up pointer" onclick="vote(this)" onkeypress="vote(this)" tabindex="0">\
                                     <img src="../assets/thumbsUp.svg" class="svg">\
                                 </span>\
                                 <span id="votes" class="{0}">{1}</span>\
-                                <span class="thumbs-down pointer" tabindex="0">\
+                                <span class="thumbs-down pointer" onclick="vote(this)" onkeypress="vote(this)" tabindex="0">\
                                     <img src="../assets/thumbsDown.svg" class="svg">\
                                 </span>\
                            </div>\

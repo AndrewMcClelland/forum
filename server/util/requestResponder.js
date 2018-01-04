@@ -74,7 +74,6 @@ exports.parseRequest = function(request) {
                 });
 				break;
 			case('reportModal'):
-
 				reportHandler.handle(request).then(function(info) {
 					resolve(info);
                 }, function (err) {
