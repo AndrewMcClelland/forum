@@ -5,23 +5,20 @@
                 button.close(type='button', data-dismiss='modal') ×
                 h4.modal-title Report
             .modal-body
-                .centered
-                    .btn-group(role='group', aria-label='Basic example')
-
-                hr
                 div
-                    .form-group
-                    h6(style='font-weight: bold;') What's Wrong?
-
-                        form
-                            </br>
-                            <input type="checkbox" name="checkIC" id ="checkIC"  /> Inappropriate Content
-                            <input type="checkbox" name="checkIL" id="checkIL"  /> Inappropriate Language
-                            <input type="checkbox" name="checkNR" id = "checkIR"  /> Not Relevant
-
-                            //input.checkbox (type= 'checkbox') Inappropriate Content
-                            //input.checkbox (type= 'checkbox') Inappropriate Language
-                            //input.checkbox (type= 'checkbox') Not Relevant
+                    h6(style='font-weight: bold;') What's Wrong with this Content?
+                    hr
+                    form.form-group
+                        input.checkbox(type='radio' name="reportCondition")
+                        | Inappropriate Content
+                        br
+                        br
+                        input.checkbox(type='radio' name="reportCondition")
+                        | Inappropriate Language
+                        br
+                        br
+                        input.checkbox(type='radio' name="reportCondition")
+                        | Not Relevant
 
                     // var list = [" input (type = checkbox) Inappropriate Content", "Inappropriate Language", "Not relavent"]
                                             each item in list
