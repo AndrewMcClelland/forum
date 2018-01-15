@@ -34,8 +34,6 @@ exports.SQLQuery = function(table, fld, op, val, join) {
     var value = _isValidData(fld, val) ? val : undefined;
     var joiner = validJoiners.includes(join) ? join : undefined;
 
-    var first = true;
-
     /*** Public methods ***/
 
     /**
@@ -63,7 +61,7 @@ exports.SQLQuery = function(table, fld, op, val, join) {
 
     /** Override toString method **/
     this.toString = function() {
-        return "SQLQuery with body: " + field + " " + operator + " " + value + "-- and joiner: " + joiner;
+        return "SQLQuery with body: " + field + " " + operator + " " + value + " -- with joiner: " + joiner;
     };
 
     /*** Private methods ***/

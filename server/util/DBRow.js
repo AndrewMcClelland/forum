@@ -31,7 +31,7 @@ exports.DBRow = function(table) {
 	var queries = [];
 	var registeredProperties = [];
 
-	this.setId = true; // allows setting of rows manually
+	this.setId = true; // allows setting row ids manually
 
 	if (!table) {
 		log.error("No table was specified for the DBRow, all queries will fail!! Object instantiation terminated.");

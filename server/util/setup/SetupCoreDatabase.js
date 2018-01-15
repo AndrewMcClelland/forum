@@ -12,7 +12,6 @@ var dbm = require('../databaseUtil/DatabaseManager.js');
 var dbr = require('../DBRow.js');
 var log = require('../log.js');
 var lit = require('../Literals.js');
-var QEFError = require('../QEFError');
 
 var possibleTypes = require('../../config/SQLDatatypes.json');
 var defaults = require('../../config/defaultTables.json');
