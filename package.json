@@ -4,7 +4,7 @@
   "description": "The Queen's Engineering Forum",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",

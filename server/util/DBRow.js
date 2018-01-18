@@ -173,7 +173,7 @@ exports.DBRow = function(table) {
 	 **
 	 ** Adds a field-value pair to filter the rows of the table by
 	**/
-	this.addQuery = function(property, value) { // with three arguments it will be interpreted as operator (OR, AND) property, value
+	this.addQuery = function(property, value) { // with three arguments it will be interpreted as property, value, operator (=, > .. etc)
 		if (arguments.length === 2)
             addQueryAndRegisterProperty(table, property, lit.sql.query.EQUALS, value, lit.sql.query.AND);
 		else if (arguments.length === 3)
@@ -299,6 +299,17 @@ exports.DBRow = function(table) {
      */
 	this.getTable = function() {
 		return table;
+	};
+
+	this.toString = function() {
+		if (rows.length > 0)
+			return "Queried DBRow object with " + rows.length + " rows. Current row index is " + currentIndex;
+		else if (Object.keys(currentRow).length !== 0)
+			return "Uninserted DBRow with current object: " + JSON.stringify(currentRow);
+		else if (queries.length > 0)
+			return "Unqueried DBRow with " + queries.length + " query(ies)";
+		else
+			return "New DBRow Object, no queries, values or rows";
 	};
 
 	function addQueryAndRegisterProperty(table, property, operator, value, joiner) {
