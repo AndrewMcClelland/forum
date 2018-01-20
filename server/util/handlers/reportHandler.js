@@ -3,7 +3,8 @@
 var DBRow = require('./../DBRow').DBRow;
 var lit = require('./../Literals');
 var log = require('./../log');
-var contributor = require('./../actions/Contributor');
+//var contributor = require('./../actions/Contributor');
+
 
 exports.handle = function(request) {
     return new Promise(function(resolve,reject) {
@@ -12,43 +13,23 @@ exports.handle = function(request) {
         var u = new DBRow(lit.tables.USER);
         u.getRow(userID).then(function()
         {
-            switch(request.body.type)
-            {
-                case("reportModal"):
-
-                    createReport(request.body.content, u, resolve, reject);
-
-            }
+            createReport(request.body.content, u, resolve, reject,userID,request);
+        }, function() {
+            reject("User does not exist, should be logged out");
         })
-    });
+    })
+
 };
 
-function getPage(el)
-{
-    el = $(el);
-    el.parent().attr('id');
-}
 
-function createReport(body, user, resolve, reject) {
-    var c = new DBROW(lit.tables.REPORT);
-    c.setValue(lit.fields.REPORTING_USER, user.getValue(lit.FIELDS.USERNAME));
-    c.setValue(lit.fields.REPORTED_USER, user.getValue(getPage(this)));
-    c.setValue(lit.fields.ITEM, getPage(this));
-    c.setValue(lit.fields.timestamp, new Date(today.getDate()));
-    if ($('checkIC').val() == 1) {
-        c.setValue(lit.fields.REPORT_REASON, 0);
-        console.log(0);
 
-    }
+function createReport(body, user, resolve, reject,id,request) {
+    var c = new DBRow(lit.tables.REPORT);
+    c.setValue(lit.fields.REPORTING_USER, id);
+    c.setValue(lit.fields.REPORTED_USER, 'user');
+    c.setValue(lit.fields.RELATED_ITEM_ID, request.body.content.itemID);
 
-    if ($('checkIL').val() == 1) {
-        c.setValue(lit.fields.REPORT_REASON, 1);
-        console.log(1);
-    }
-    if ($('checkIR').val() == 1) {
-        c.setValue(lit.fields.REPORT_REASON, 2);
-        console.log(2);
-    }
+    c.setValue(lit.fields.REPORT_REASON,request.body.content.problemType);
     c.insert().then(function() {
 
     }, function(err) {

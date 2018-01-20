@@ -54,6 +54,8 @@ server.get(lit.routes.ROOT, function(request, response) { // default link, deliv
     });
 });
 
+
+
 server.get(lit.routes.QUESTION, function(request, response) { // question page, queried by id
 	if (compare.isEmpty(request.signedCookies))
         return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
@@ -61,7 +63,7 @@ server.get(lit.routes.QUESTION, function(request, response) { // question page, 
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
             title: 'Question',
-            scripts: ['templating.js', 'question.js', 'pulse.js']
+            scripts: ['templating.js', 'question.js', 'pulse.js','reportModal.js']
         });
 	}).catch(function() {
         response.render('notFound', {
@@ -88,7 +90,7 @@ server.get(lit.routes.NEW, function(request, response) { // place where new thin
         return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 	response.render('new', {
         title: 'New Entry',
-        scripts: ['new.js', 'pulse.js'],
+        scripts: ['new.js', 'pulse.js','reportModal.js'],
         nav: "menuOnly"
     });
 });
@@ -99,7 +101,8 @@ server.get(lit.routes.LIST, function(request, response) { //return the a default
 
 	response.render('list', {
         title: 'Questions',
-        scripts: ['pulse.js', 'templating.js', 'list.js'],
+        scripts: ['pulse.js', 'templating.js', 'list.js','reportModal.js'],
+
         nav: "search"
     });
 });
@@ -210,7 +213,7 @@ server.get(lit.routes.CLASS, function(request, response) {
     validator.validateItemExistence(request).then(function() {
         response.render('class', {
             title: 'Class',
-            scripts: ['templating.js', 'class.js', 'pulse.js'],
+            scripts: ['templating.js', 'class.js', 'pulse.js','reportModal.js'],
             nav: "search"
         });
     }).catch(function() {
@@ -229,7 +232,7 @@ server.get(lit.routes.LINK, function(request, response) {
     validator.validateItemExistence(request).then(function() {
         response.render('link', {
             title: 'Link',
-            scripts: ['templating.js', 'link.js', 'pulse.js'],
+            scripts: ['templating.js', 'link.js', 'pulse.js','reportModal.js'],
             nav: "search"
         });
     }).catch(function() {
