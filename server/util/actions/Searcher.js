@@ -26,13 +26,13 @@ var natural = require("natural");
 var algorithmia = require("algorithmia");
 var lit = require('./../Literals.js');
 var log = require('./../log.js');
-var DBRow = require('./../DBRow.js');
+var DBRow = require('./../DBRow.js').DBRow;
 var recursion = require('../recursion');
 
 var TfIdf = natural.TfIdf;
 var wordRelater = new TfIdf;
 
-var searchableTables = [lit.tables.CLASS, lit.tables.LINK, lit.tables.PORT, lit.tables.COMMENT, lit.tables.TAG];
+var searchableTables = [lit.tables.CLASS, lit.tables.LINK, lit.tables.POST, lit.tables.COMMENT, lit.tables.TAG];
 
 /**
  * Function argument used for recursively getting the generated tags of a searchable row. Adds tags to the wordRelater.
@@ -108,40 +108,39 @@ exports.searchForContent = function (inputSearch, table) {
  */
 exports.generateTags = function (newRow, table) {
     return new Promise(function (resolve, reject) {
-            if (goodInputs("this is a good search", table)) { //dummy input search so goodInputs() can be re-used for the table arg
+        if (goodInputs("this is a good search", table)) { //dummy input search so goodInputs() can be re-used for the table arg
 
-                //get the fields and add all fields together to get content to search for
-                var fields = getSearchableFields(table);
-                var content = " ";
-                for (var index in fields) {
-                    content += newRow.getValue(fields[index]) + "\n";
+            //get the fields and add all fields together to get content to search for
+            var fields = getSearchableFields(table);
+            var content = " ";
+            for (var index in fields) {
+                content += newRow.getValue(fields[index]) + "\n";
+            }
+
+            getKeyTerms(content).then(function (keyTerms) {
+                var tags = "";
+                for (var i in keyTerms) {
+                    tags += keyTerms[i];
+                    if (i < keyTerms.length - 1) {
+                        tags += " "; //space splits up tags
+                    }
                 }
 
-                getKeyTerms(content).then(function (keyTerms) {
-                    var tags = "";
-                    for (var i in keyTerms) {
-                        tags += keyTerms[i];
-                        if (i < keyTerms.length - 1) {
-                            tags += " "; //space splits up tags
-                        }
-                    }
+                if (!tags)
+                    tags = "NULL";
 
-                    if (!tags)
-                        tags = "NULL";
-
-                    newRow.setValue(lit.fields.GEN_TAGS, tags);
-                    newRow.update().then(function () {
-                        resolve(tags); //string of all tags to be put into field for the new post
-                    });
-                }).catch(function (error) {
-                    log.error("tagPosts error: " + error);
-                    reject(undefined);
+                newRow.setValue(lit.fields.GEN_TAGS, tags);
+                newRow.update().then(function () {
+                    resolve(tags); //string of all tags to be put into field for the new post
                 });
-            } else {
-                reject("Tried to generate tags for a bad table");
-            }
+            }).catch(function (error) {
+                log.error("tagPosts error: " + error);
+                reject(undefined);
+            });
+        } else {
+            reject("Tried to generate tags for a bad table");
         }
-    );
+    });
 };
 
 /**
