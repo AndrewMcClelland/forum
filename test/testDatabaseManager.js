@@ -5,6 +5,15 @@ var dbm = require('../server/util/databaseUtil/DatabaseManager');
 
 describe('DatabaseManager', function() {
 
+    before(function() {
+        dbm.useDB('testing');
+    });
+
+    after(function() {
+        dbm.kill();
+    });
+
+
     describe('#query()', function() {
         var deleted = false;
         it('should respond with a single, simple object containing "some text"', function() {
