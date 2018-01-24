@@ -67,18 +67,22 @@ function executeAdvanced(resolve, reject, request) {
     var info = [[]];
     var userID = request.signedCookies.usercookie.userID;
 
-    var title = request.query.titleContains;
+    //var title = request.query.titleContains;
     var table = request.query.table;
-    var tags = request.query.tags;
-    var keywords = request.query.keywords;
-    var exactPhrase = request.query.exactPhrase;
-
+    //var tags = request.query.tags;
+    //var keywords = request.query.keywords;
+    //var exactPhrase = request.query.exactPhrase;
 
     if(table === "posts") {
+        var postTitle = request.query.postTitle;
+        var postTags = request.query.postTags;
+        var keywords = request.query.keywords;
+        var exactPhrase = request.query.exactPhrase;
+
         var posts = new DBRow(lit.tables.POST);
 
-        if (title) //
-            addCommaSeparatedStringToQuery(posts, lit.fields.TITLE, title);
+        if (postTitle) //
+            addCommaSeparatedStringToQuery(posts, lit.fields.TITLE, postTitle);
 
         if (keywords) // can be in the content, but don't have to
             addCommaSeparatedStringToQuery(posts, lit.fields.CONTENT, keywords);
@@ -86,8 +90,8 @@ function executeAdvanced(resolve, reject, request) {
         if (exactPhrase) // must be in the content somewhere
             posts.addQuery(lit.fields.CONTENT, '%'+exactPhrase+'%');
 
-        if (tags) // must be in the tag field
-            addCommaSeparatedStringToQuery(posts, lit.fields.TAGS, tags);
+        if (postTags) // must be in the tag field
+            addCommaSeparatedStringToQuery(posts, lit.fields.TAGS, postTags);
 
         posts.query().then(function() {
             recursion.recursiveGetRowListWithVotes(resolve, reject, posts, itemInfo.generalInfo, userID, info)
@@ -101,16 +105,24 @@ function executeAdvanced(resolve, reject, request) {
     }
 
     // will not work, there is no CONTENT field on link
-    if(table === "link"){
-        var links = new DBRow(lit.tables.POST);
+    if(table === "links"){
+        var link = request.query.link;
+        var linkTags = request.query.linkTags;
+        var linkTitle = request.query.linkTitle;
 
-        if (title) //
-            addCommaSeparatedStringToQuery(links, lit.fields.TITLE, title);
+        var links = new DBRow(lit.tables.LINK);
 
-        if (tags) // must be in the tag field
-            addCommaSeparatedStringToQuery(links, lit.fields.TAGS, tags);
+        if (linkTitle) //
+            addCommaSeparatedStringToQuery(links, lit.fields.TITLE, linkTitle);
 
-        posts.query().then(function() {
+        if (linkTags) // must be in the tag field
+            addCommaSeparatedStringToQuery(links, lit.fields.TAGS, linkTags);
+
+        if (link)
+            links.addQuery(lit.fields.LINK, link);
+
+
+        links.query().then(function() {
             recursion.recursiveGetRowListWithVotes(resolve, reject, links, itemInfo.generalInfo, userID, info)
         }).catch(function(err, message){
             console.log('err receiving rows');
@@ -123,32 +135,53 @@ function executeAdvanced(resolve, reject, request) {
     // will not work, the class table does not have most of these fields
     if(table === "classes"){
 
-        var classer = new DBRow(lit.tables.post);
+        var classTags = request.query.classTags;
+        var classTitle = request.query.classTitle;
+        var courseCode = request.query.courseCode;
+
+        var classer = new DBRow(lit.tables.CLASS);
+
+        if (classTags)
+            addCommaSeparatedStringToQuery(classer, lit.fields.TAGS, classTags);
+
+        if (classTitle)
+            addCommaSeparatedStringToQuery(classer, lit.fields.TITLE, classTitle);
+
+        if (courseCode)
+            classer.addQuery(lit.fields.COURSE_CODE, courseCode);
+
 
         classer.query().then(function() {
-            if(!classer.next()){
-                return console.log("nothing");
-            }
-            while(classer.next()){
-                classer.addQuery(lit.fields.TITLE, title);
-                classer.addQuery(lit.fields.CONTENT, keywords);
-                classer.addQuery(lit.fields.CONTENT, lit.sql.query.LIKE, "%"+ exactWords +"%");
-                classer.addQuery(lit.fields.TAGS, lit.sql.query.LIKE, "%"+ tags +"%");
-            }
-        }, function(err) {
-            console.log("No rows match, error");
-            reject(false);
+            recursion.recursiveGetRowListWithVotes(resolve, reject, classer, itemInfo.generalInfo, userID, info)
+        }).catch(function(err, message){
+            console.log('err receiving rows');
+            console.log(err);
+            console.log(message);
+            reject();
         });
-
-
     }
 
     // will not work at all, the user table does not have any of these tags
     if(table === "user"){
 
-        var userer = new DBRow(lit.tables.post);
+        var user = request.query.user;
+
+        var userer = new DBRow(lit.tables.USER);
+
+        if (user)
+            userer.addQuery(lit.fields.USERNAME, user);
 
         userer.query().then(function() {
+            recursion.recursiveGetRowListWithVotes(resolve, reject, userer, itemInfo.generalInfo, userID, info)
+        }).catch(function(err, message){
+            console.log('err receiving rows');
+            console.log(err);
+            console.log(message);
+            reject();
+        });
+    }
+
+        /*userer.query().then(function() {
             if(!userer.next()){
                 return console.log("nothing");
             }
@@ -163,7 +196,7 @@ function executeAdvanced(resolve, reject, request) {
             reject(false);
         });
 
-    }
+    }*/
 }
 
 
