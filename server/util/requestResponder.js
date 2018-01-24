@@ -11,7 +11,7 @@
 "use strict";
 
 var questionHandler = require('./handlers/questionHandler');
-var listHandler = require('./handlers/listHandler');
+var listSerializer = require('./listSerializer');
 var profileHandler = require('./handlers/profileHandler');
 var newHandler = require('./handlers/newHandler');
 var linkHandler = require('./handlers/linkHandler');
@@ -39,10 +39,10 @@ exports.parseRequest = function(request) {
 				});
 				break;
 			case ("list"):
-                listHandler.handle(request).then(function(info) {
+                listSerializer.getListPageItems(request, 0).then(function(info) {
 					resolve(info);
-				}, function(err) {
-					reject(undefined);
+				}).catch(function(err) {
+					console.log(err);
 				});
 				break;
 			case("question"):

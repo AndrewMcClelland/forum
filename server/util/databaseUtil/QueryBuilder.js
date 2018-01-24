@@ -153,6 +153,10 @@ exports.escapeLimit = function(limitNum) {
 	return "LIMIT " + resolveObjectType(limitNum);
 };
 
+exports.escapeOffset = function(offset) {
+    return "OFFSET " + resolveObjectType(offset);
+};
+
 /** Escapes the order by clause for queries
  *
  * @param table {string}: the table the field to order by should be on

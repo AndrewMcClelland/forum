@@ -25,6 +25,7 @@ var lit = require('./Literals.js');
 exports.DBRow = function(table) {
 	var querySort = "";
 	var returnLimit = "";
+	var returnOffset = "";
 	var currentIndex = -1;
 	var rows = [];
 	var currentRow = {}; // left as an empty object in case we are creating a new row
@@ -75,7 +76,7 @@ exports.DBRow = function(table) {
 	 ** Note: if a row does not match this query, undefined will be returned and the promise is not rejected.
 	**/
 	this.query = function() {
-		var qs =  qb.query(table, queries, registeredProperties) + ' ' + querySort + ' ' + returnLimit;
+		var qs =  qb.query(table, queries, registeredProperties) + ' ' + querySort + ' ' + returnLimit + ' ' + returnOffset;
 		log.log("QUERY with query string: '" + qs + "'");
 		return new Promise(function(resolve, reject) {
 			dbm.query(qs).then(function(row) {
@@ -251,6 +252,14 @@ exports.DBRow = function(table) {
 	**/
 	this.setLimit = function(limit) {
 		returnLimit = qb.escapeLimit(limit);
+	};
+
+    /**
+	 *
+     * @param offset {number}: The number of rows to offset
+     */
+	this.setOffset = function(offset) {
+		returnOffset = qb.escapeOffset(offset);
 	};
 
 	/** next()

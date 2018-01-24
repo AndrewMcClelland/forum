@@ -20,8 +20,7 @@ var voter = require('./actions/Voter');
 var tagger = require('./actions/Tagger');
 var commenter = require('./actions/Commenter');
 var rater = require('./actions/Rater');
-// var getter = require('./actions/Getter');
-var DBRow = require('./DBRow').DBRow;
+var ls = require('./listSerializer');
 
 
 exports.respond = function(request) {
@@ -151,8 +150,5 @@ function rate(request) {
 }
 
 function getMore(request) {
-    return new Promise(function(resolve, reject) {
-        getter.getMore(request).then(function(res){resolve(res)}, function() {reject(false)})
-            .catch(function(err) {console.error('Getter getMore error: ' + err)})
-    })
+    return ls.getListPageItems(request, request.body.currentNum);
 }
