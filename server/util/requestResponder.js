@@ -16,6 +16,7 @@ var profileHandler = require('./handlers/profileHandler');
 var newHandler = require('./handlers/newHandler');
 var linkHandler = require('./handlers/linkHandler');
 var classHandler = require('./handlers/classHandler');
+var reportHandler = require('./handlers/reportHandler');
 var lit = require('./Literals.js');
 var feedbackHandler = require('./handlers/feedbackHandler');
 
@@ -73,13 +74,20 @@ exports.parseRequest = function(request) {
                     reject(err);
                 });
 				break;
-			case('feedback'):
-				feedbackHandler.handle(request).then(function(info){
-					resolve (info);
+            case('reportModal'):
+                reportHandler.handle(request).then(function(info) {
+                    resolve(info);
+                }, function (err) {
+                    reject(err);
+                });
+                break;
+            case('feedback'):
+                feedbackHandler.handle(request).then(function(info){
+                    resolve (info);
                 }, function(err) {
                     reject(err);
                 });
-				break;
+                break;
 			default: // TODO: class, link
 				reject("Invalid request type");
 				break;

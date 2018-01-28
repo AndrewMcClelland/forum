@@ -77,5 +77,6 @@ function getMore() {
     });
 }
 
+
 // render the page
 $(document).ready(whenLoaded);

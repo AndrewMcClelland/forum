@@ -43,7 +43,7 @@ var classTemplate = '<div class="info-block clearfix">\
                             <div class="action-links">\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                             </div>\
                             {3}\
                             </div>\
@@ -57,7 +57,7 @@ var level1ReviewTemplate = '<div class="col-sm-12" id="{0}">\
                                 <span class="date">{2} by <a href="profile/username={3}">{4}</a></span>\
                                 <div class="description show-links">{5}</div>\
                                 <button class="btn btn-sm button" onclick="save(this)">Save</button>\
-                                <button class="btn btn-sm button" onclick="report(this)">Report</button>\
+                                <button class="btn btn-sm button" onclick="triggerReportModal(this)">Report</button>\
                                 <hr />\
                             </div>';
 

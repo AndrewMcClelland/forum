@@ -22,7 +22,7 @@ var linkTemplate = '<div class="info-block row" id="{11}" data-hasvoted="{12}" d
                                 <div class="action-links">\
                                     <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                     <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                    <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                    <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                                 </div>\
                                 <div class="comment-button-wrap">\
                                     <button type="button" class="btn btn-sm button" data-toggle="collapse" data-target="#editor">Comment</button>\
