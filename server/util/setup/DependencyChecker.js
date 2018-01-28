@@ -10,7 +10,7 @@
 var log = require('../log');
 
 const dependencies = ['mysql', 'express', 'path', 'fs', 'cookie-parser', 'body-parser', 'nodemailer',
-	'nodemailer-smtp-transport', 'algorithmia', 'natural', 'pug'];
+	'nodemailer-smtp-transport', 'algorithmia', 'natural', 'pug', 'mocha', 'chai', 'natural'];
 
 /**
  * Checks to make sure all the dependencies in the dependencies array exist in the execution environment
@@ -25,7 +25,7 @@ exports.checkDependencies = function() {
                 require(dependencies[i]);
                 log.info("Cool, looks like the module " + dependencies[i] + " is already installed!")
             } catch (e) {
-                log.warn("Uh oh, looks like you're missing the module " + dependencies[i]);
+                log.warn("Uh oh, looks like you're missing the module: '" + dependencies[i] + "'");
                 modulesYouNeed.push(dependencies[i]);
             }
         }
@@ -46,8 +46,8 @@ function logSummary(dependencyList, modulesNotInstalled) {
 	log.info("~~~~~~~~~~~~~~~~~~~~Summary~~~~~~~~~~~~~~~~~~~");
 	log.info((dependencyList.length - modulesNotInstalled.length) + "/" +dependencyList.length + " modules installed");
 
-	if (modulesNotInstalled.length == 0) {
-		log.info("You have all the modules necesary to run this service!");
+	if (modulesNotInstalled.length === 0) {
+		log.info("You have all the modules necessary to run this service!");
 		return true;
 	}
 

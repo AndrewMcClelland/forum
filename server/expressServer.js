@@ -14,8 +14,6 @@ var requestor = require('./util/requestResponder');
 var action = require('./util/actionResponder');
 var lit = require('./util/Literals.js');
 var PM = require('./util/PropertyManager');
-var dbr = require('./util/DBROW');
-var generator = require('./util/Generator');
 
 const PORT = PM.getConfigProperty(lit.config.PORT);
 var server = express();
