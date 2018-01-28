@@ -30,9 +30,9 @@ function submitReport() {
     newContent = {
         requested: "reportModal", //
         problemType: buttonPressed, // I'm just hard-coding this guy for now , you need to use jQuery to determine which radio button is pressed
-        content: 'There is an issue with this content',
-        itemID: reportItemRef
-
+        content: "Content",
+        itemID: reportItemRef,
+        reportedUser: "a userid"
 
     };
 
@@ -56,3 +56,4 @@ function onSuccessfulInsert(data) {
     else
         console.error('Error inserting new item');
 }
+

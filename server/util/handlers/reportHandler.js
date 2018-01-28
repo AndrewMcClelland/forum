@@ -13,7 +13,7 @@ exports.handle = function(request) {
         var u = new DBRow(lit.tables.USER);
         u.getRow(userID).then(function()
         {
-            createReport(request.body.content, u, resolve, reject,userID,request);
+            createReport(userID, request);
         }, function() {
             reject("User does not exist, should be logged out");
         })
@@ -21,18 +21,15 @@ exports.handle = function(request) {
 
 };
 
-
-
-function createReport(body, user, resolve, reject,id,request) {
+function createReport(id, request) {
     var c = new DBRow(lit.tables.REPORT);
     c.setValue(lit.fields.REPORTING_USER, id);
-    c.setValue(lit.fields.REPORTED_USER, 'user');
-    c.setValue(lit.fields.RELATED_ITEM_ID, request.body.content.itemID);
+    c.setValue(lit.fields.REPORTED_USER, request.body.reportedUser);
+    c.setValue(lit.fields.RELATED_ITEM_ID, request.body.itemID);
+    c.setValue(lit.fields.REPORT_REASON, request.body.problemType);
+    c.insert().then(function () {
 
-    c.setValue(lit.fields.REPORT_REASON,request.body.content.problemType);
-    c.insert().then(function() {
-
-    }, function(err) {
+    }, function (err) {
         log.error(err);
     })
 }
