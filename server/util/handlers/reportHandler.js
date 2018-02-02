@@ -27,6 +27,9 @@ function createReport(id, request) {
     c.setValue(lit.fields.REPORTED_USER, request.body.reportedUser);
     c.setValue(lit.fields.RELATED_ITEM_ID, request.body.itemID);
     c.setValue(lit.fields.REPORT_REASON, request.body.problemType);
+    request.body.reason = request.body.reason ? request.body.reason : null;
+    c.setValue(lit.fields.REPORT, request.body.reason);
+
     c.insert().then(function () {
 
     }, function (err) {
