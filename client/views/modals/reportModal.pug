@@ -9,16 +9,25 @@
                     h6(style='font-weight: bold;') What's Wrong with this Content?
                     hr
                     form.form-group
-                        input.checkbox(type='radio' name="reportCondition" id="checkIC")
+                        input.checkbox(type='radio' name="reportCondition" id="checkIC" onclick="dropText()")
                         | Inappropriate Content
                         br
                         br
-                        input.checkbox(type='radio' name="reportCondition" id="checkIL")
+                        input.checkbox(type='radio' name="reportCondition" id="checkIL" onclick="dropText()")
                         | Inappropriate Language
                         br
                         br
-                        input.checkbox(type='radio' name="reportCondition" id="checkIR")
+                        input.checkbox(type='radio' name="reportCondition" id="checkIR" onclick="dropText()")
                         | Not Relevant
+                        br
+                        br
+                        input.checkbox(type='radio' name="reportCondition" id="checkOther" onclick="showText()")
+                        | Other
+                        br
+                        br
+                        textarea#txtOther.hidden
+
+
 
                     // var list = [" input (type = checkbox) Inappropriate Content", "Inappropriate Language", "Not relavent"]
                                             each item in list

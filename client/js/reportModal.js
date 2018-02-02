@@ -4,6 +4,8 @@ var reportItemRef = '';
 
 function submitReport() {
     var href = 'info';
+
+    var reportReason = $('#txtOther')[0].value;
     var newContent;
     var buttonPressed;
     if (reportItemRef === '') // don't allow a submission if there's no item referenced
@@ -11,20 +13,25 @@ function submitReport() {
 
     if ($('#checkIC').is(':checked')) {
 
-        console.log(0);
         buttonPressed = 0;
+
     }
 
     if ($('#checkIL').is(':checked')) {
 
-        console.log(1);
         buttonPressed = 1;
     }
     if ($('#checkIR').is(':checked')) {
 
-        console.log(2);
         buttonPressed = 2;
     }
+    if ($('#checkOther').is(':checked')) {
+
+        buttonPressed = 3;
+
+    }
+
+
 
     // case: reportModal... reportModal.handle, don't close modal until success/failure is returned
     newContent = {
@@ -32,7 +39,9 @@ function submitReport() {
         problemType: buttonPressed, // I'm just hard-coding this guy for now , you need to use jQuery to determine which radio button is pressed
         content: "Content",
         itemID: reportItemRef,
-        reportedUser: "a userid"
+        reportedUser: "a userid",
+        reason: reportReason,
+
 
     };
 
@@ -57,3 +66,10 @@ function onSuccessfulInsert(data) {
         console.error('Error inserting new item');
 }
 
+function showText() {
+    $('#txtOther').removeClass('hidden');
+}
+function dropText() {
+    $('#txtOther').addClass('hidden');
+    $('#txtOther')[0].value = '';
+}
