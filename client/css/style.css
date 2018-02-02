@@ -186,14 +186,14 @@ a:focus {
 
 .search-bar {
   background-color: white;
-  width: 900px;
+  width: 90%;
   height: 50px;
   margin: auto;
   border-radius: 10px;
 }
 
 .search-bar input {
-  width: 850px;
+  width: 80%;
   height: inherit;
   background-color: transparent;
   border: none;
@@ -714,13 +714,18 @@ textarea.modal-plaintext {
 }
 
 /* Fun Css*/
-.rainbows
-color: white
-text-shadow: rainbow-shadow(50, 0.2, 60%, 45%)
+/* THIS IS SCSS NOT CSS
 
-@function rainbow-shadow ($cycle, $depth, $sat, $bri)
-$value: ''
-@for $i from 1 through $cycle
-$value: $value + '-#{$depth * $i}px #{$depth * $i}px 0 hsla(#{$i * (360/$cycle)}, #{$sat}, #{$bri}, 1), '
-$value: $value + '0px 0px 0px hsla(0,0%,0%,0)'
-@return unquote($value)
+@function rainbow-shadow ($cycle, $depth, $sat, $bri) {
+  $value: '';
+  @for $ i from 1 through $ {
+    cycle $value: $ value+ '-#{$depth * $i}px #{$depth * $i}px 0 hsla(#{$i * (360/$cycle)}, #{$sat}, #{$bri}, 1), ' $value: $ value+ '0px 0px 0px hsla(0,0%,0%,0)'
+  }
+  @return unquote($ value)
+}
+
+.rainbows {
+  color: white;
+  text-shadow: rainbow-shadow(50, 0.2, 60%, 45%);
+}
+*/
