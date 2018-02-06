@@ -713,6 +713,11 @@ textarea.modal-plaintext {
   height: 80%;
 }
 
+#right-hand-button, .space-left {
+  margin-left: 2px;
+}
+
+
 /* Fun Css*/
 /* THIS IS SCSS NOT CSS
 
