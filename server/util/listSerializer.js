@@ -35,8 +35,11 @@ exports.getListPageItems = function(request, index) {
 
         if (!items)
             return reject(false);
+        if (items.getTable() === "post" || items.getTable() === "link")
+            items.orderBy(lit.fields.TIMESTAMP, lit.sql.query.DESC);
+        else
+            items.orderBy(lit.fields.AVERAGE_RATING, lit.sql.query.DESC);
 
-        items.orderBy(lit.fields.TIMESTAMP, lit.sql.query.DESC);
         items.setLimit(20);
         if (index > 0)
             items.setOffset(index * 20);
