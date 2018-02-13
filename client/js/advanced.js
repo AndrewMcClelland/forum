@@ -24,13 +24,13 @@ function sendQuery() {
         if (postTags.length > 0)
             queryString += '&postTags=' + getCommaDelimitedString(postTags);
 
-        else if (keywords.length > 0)
+        if (keywords.length > 0)
             queryString += '&keywords=' + getCommaDelimitedString(keywords);
 
-        else if (exactPhrase.length > 0)
+        if (exactPhrase.length > 0)
             queryString += '&exactPhrase=' + exactPhrase;
 
-        else if (postTitle.length > 0)
+        if (postTitle.length > 0)
             queryString += '&postTitle=' + getCommaDelimitedString(postTitle);
     }
 
@@ -42,10 +42,10 @@ function sendQuery() {
         if (link.length > 0)
             queryString += '&link=' + link;
 
-        else if (linkTags.length > 0)
+        if (linkTags.length > 0)
             queryString += '&linkTags=' + getCommaDelimitedString(linkTags);
 
-        else if (linkTitle.length > 0)
+        if (linkTitle.length > 0)
             queryString += '&linkTitle=' + getCommaDelimitedString(linkTitle);
     }
 
@@ -57,10 +57,10 @@ function sendQuery() {
         if (classTags.length > 0)
             queryString += '&classTags=' + getCommaDelimitedString(classTags);
 
-        else if (classTitle.length > 0)
+        if (classTitle.length > 0)
             queryString += '&classTitle=' + getCommaDelimitedString(classTitle);
 
-        else if (courseCode.length > 0)
+        if (courseCode.length > 0)
             queryString += '&courseCode=' + courseCode;
     }
 

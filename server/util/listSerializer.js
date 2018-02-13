@@ -23,7 +23,7 @@ exports.getListPageItems = function(request, index) {
     var info = [];
     var userID = request.signedCookies.usercookie.userID;
     return new Promise(function (resolve, reject) {
-        var items;
+        var items = new DBRow(lit.tables.ITEM);
 
         if (request.query.hasOwnProperty('query'))
             return useSearch(resolve, reject, request);
@@ -35,8 +35,11 @@ exports.getListPageItems = function(request, index) {
 
         if (!items)
             return reject(false);
+        if (items.getTable() === "post" || items.getTable() === "link")
+            items.orderBy(lit.fields.TIMESTAMP, lit.sql.query.DESC);
+        else
+            items.orderBy(lit.fields.AVERAGE_RATING, lit.sql.query.DESC);
 
-        items.orderBy(lit.fields.TIMESTAMP, lit.sql.query.DESC);
         items.setLimit(20);
         if (index > 0)
             items.setOffset(index * 20);
@@ -75,14 +78,20 @@ function useSearch(resolve, reject, request) {
  */
 function constructAdvancedQuery(request) {
     var row;
-    var title = request.query.titleContains;
-    var tags = request.query.tags;
-    var keywords = request.query.keywords;
-    var exactPhrase = request.query.exactPhrase;
+    var info = [[]];
+    var userID = request.signedCookies.usercookie.userID;
 
     switch(request.query.table) {
         case ("posts"):
+            //var poster = new DBRow(lit.tables.POST);
+
             row = new DBRow(lit.tables.POST);
+
+            var title = request.query.postTitle;
+            var tags = request.query.postTags;
+            var keywords = request.query.keywords;
+            var exactPhrase = request.query.exactPhrase;
+
             if (title)
                 addCommaSeparatedStringToQuery(row, lit.fields.TITLE, title);
 
@@ -90,7 +99,7 @@ function constructAdvancedQuery(request) {
                 addCommaSeparatedStringToQuery(row, lit.fields.CONTENT, keywords);
 
             if (exactPhrase)
-                posts.addQuery(lit.fields.CONTENT, '%' + exactPhrase + '%');
+                row.addQuery(lit.fields.CONTENT, '%' + exactPhrase + '%');
 
             if (tags)
                 addCommaSeparatedStringToQuery(row, lit.fields.TAGS, tags);
@@ -99,20 +108,48 @@ function constructAdvancedQuery(request) {
 
         case ("links"):
             row = new DBRow(lit.tables.LINK);
-            if (title)
-                addCommaSeparatedStringToQuery(row, lit.fields.TITLE, title);
 
-            if (tags)
-                addCommaSeparatedStringToQuery(row, lit.fields.TAGS, tags);
+            var link = request.query.link;
+            var linkTags = request.query.linkTags;
+            var linkTitle = request.query.linkTitle;
+
+            if (linkTitle)
+                addCommaSeparatedStringToQuery(row, lit.fields.TITLE, linkTitle);
+
+            if (linkTags)
+                addCommaSeparatedStringToQuery(row, lit.fields.TAGS, linkTags);
+
+            if (link)
+                row.addQuery(lit.fields.LINK, link);
 
             break;
 
         case ("classes"):
             row = new DBRow(lit.tables.CLASS);
+
+            var classTags = request.query.classTags;
+            var classTitle = request.query.classTitle;
+            var courseCode = request.query.courseCode;
+
+            if (classTags)
+                addCommaSeparatedStringToQuery(row, lit.fields.TAGS, classTags);
+
+            if (classTitle)
+                addCommaSeparatedStringToQuery(row, lit.fields.TITLE, classTitle);
+
+            if (courseCode)
+                row.addQuery(lit.fields.COURSE_CODE, courseCode);
+
             break;
 
         case("users"):
             row = new DBRow(lit.tables.USER);
+
+            var user = request.query.user;
+
+            if (user)
+                row.addQuery(lit.fields.USERNAME, user);
+
             break;
     }
     return row;
