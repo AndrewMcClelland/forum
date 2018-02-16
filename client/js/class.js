@@ -170,7 +170,7 @@ function fillInClassHeader(cl) {
  */
 function addReviews(reviews) {
     var template;
-    if (reviews.length == 0) {
+    if (reviews.length === 0) {
         $('#getMore').hide();
         $('#foot').append("<h6 class='info-block'>Nothing here yet! Add a comment to get the discussion going!</h6>");
         return;

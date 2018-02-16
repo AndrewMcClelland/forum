@@ -25,9 +25,9 @@ html(lang='en')
         script(type='text/javascript', src='/js/' + script)
   body
     #wrap.container-fluid
-      if nav == "search"
+      if nav === "search"
         include includes/navbarWithSearchAndMenu
-      else if nav == "menuOnly"
+      else if nav === "menuOnly"
         include includes/navbarWithMenu
       else
         include includes/navbarWithMenu

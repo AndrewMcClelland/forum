@@ -211,7 +211,7 @@ function addToNotificationsMissed(contentID) {
 function setNotificationsMissedToZero(subIDs) {
     //check that subIDs can actually be used to find users emailed
     //if not (empty), stop this function and continue to next then chain
-    if (subIDs.length == 0) {
+    if (subIDs.length === 0) {
         return subIDs;
     }
     var row = new dbr.DBRow(lit.tables.SUBSCRIPTIONS);
@@ -261,7 +261,7 @@ function updateNotificationsMissed(row) {
 function setLastNotifiedToNow(subIDs) {
     //check that subIDs can actually be used to find users emailed
     //if not (empty), stop this function and continue to next then chain
-    if (subIDs.length == 0) {
+    if (subIDs.length === 0) {
         return;
     }
     var row = new dbr.DBRow(lit.tables.SUBSCRIPTIONS);
@@ -295,7 +295,7 @@ function setLastNotifiedToNow(subIDs) {
 function getSubscriptionIDs(userIDs, contentID) {
     //check that userIDs can actually be used to find users
     //if not (empty), stop this function and continue to next then chain
-    if (userIDs.length == 0) {
+    if (userIDs.length === 0) {
         return userIDs;
     }
     var subIDs = [];
@@ -306,7 +306,7 @@ function getSubscriptionIDs(userIDs, contentID) {
     return new Promise(function (resolve, reject) {
         row.query().then(function () {
             while (row.next()) {
-                if (row.getValue(lit.fields.ITEM_ID) == contentID) { //ID of row that was emailed for
+                if (row.getValue(lit.fields.ITEM_ID) === contentID) { //ID of row that was emailed for
                     subIDs.push(row.getValue(lit.fields.ID));
                 }
             }

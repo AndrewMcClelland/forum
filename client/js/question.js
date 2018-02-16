@@ -89,7 +89,7 @@ function fillInQuestionHeader(details) {
 function addComments(comments) {
     var template;
 
-    if (comments.length == 0) {
+    if (comments.length === 0) {
         $('#getMore').hide();
         $('#foot').append("<h6 class='info-block'>Nothing here yet! Add a comment to get the discussion going!</h6>");
         return;

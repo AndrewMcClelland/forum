@@ -123,7 +123,7 @@ function getPressed() {
  */
 function getContent(type) {
     var tags;
-    if (type == "class") {
+    if (type === "class") {
         tags = getTags('#classTags');
         return {
             title: $('#classTitle').val(),
@@ -136,7 +136,7 @@ function getContent(type) {
             rawTags: tags[0]
         };
     }
-    else if (type == "link") {
+    else if (type === "link") {
         tags = getTags('#linkTags');
         return {
             title: $('#linkTitle').val(),
@@ -146,7 +146,7 @@ function getContent(type) {
             rawTags: tags[0]
         };
     }
-    else if (type == "question") {
+    else if (type === "question") {
         tags = getTags('#questionTags');
         return {
             title: $('#questionTitle').val(),

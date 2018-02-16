@@ -22,7 +22,7 @@ var lit = require('./../Literals');
 exports.generalInfo = function(item, vote, type, list) {
     var hasVoted = vote ? (vote.getValue(lit.fields.VOTE_VALUE) ? "positive" : "negative") : undefined; // true if there is a vote, false if there is no vote
     var voteValue;
-    if (type == 'post' || type == 'link')
+    if (type === 'post' || type === 'link')
         voteValue = vote ? vote.getValue(lit.fields.VOTE_VALUE) : 0;
 
     var data;

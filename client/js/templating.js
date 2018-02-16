@@ -178,7 +178,7 @@ function getTags(tagArray) {
 function getDateString(date) {
     if (!date)
         return undefined;
-    else if (date == "Just Now")
+    else if (date === "Just Now")
         return date;
 
     return date.slice(0, date.indexOf('T'));
@@ -343,15 +343,15 @@ function buildList(items, target) {
         if (it.voted)
             updateItemsWithPolarity.push({id: it.id, polarity: it.voted});
 
-        if (it.type == "post")
+        if (it.type === "post")
             filledTemplate = fillPostTemplate(it);
-        else if (it.type == "link")
+        else if (it.type === "link")
             filledTemplate = fillLinkTemplate(it);
-        else if (it.type == "class")
+        else if (it.type === "class")
             filledTemplate = fillClassTemplate(it);
-        else if (it.type == "comment")
+        else if (it.type === "comment")
             filledTemplate = fillCommentTemplate(it);
-        else if (it.type == "rating")
+        else if (it.type === "rating")
             filledTemplate = fillReviewTemplate(it);
 
         if (filledTemplate)
