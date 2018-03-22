@@ -86,8 +86,7 @@ function createClass(body, user, resolve, reject) {
  * @param reject: The rejection of the linkHandler.handle function's promise
  */
 function createLink(body, user, resolve, reject) {
-    getTagsIfNotPresent(body);
-    linkAunthenticator(body.href); // check if this link should be trusted
+    getTagsIfNotPresent(body);// check if this link should be trusted
     var l = new DBRow(lit.tables.LINK);
     l.setValue(lit.fields.TITLE, body.title);
     l.setValue(lit.fields.SUMMARY, body.summary);
