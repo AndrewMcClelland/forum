@@ -6,7 +6,7 @@
 */
 
 "use strict";
-function linkAunthenticator(url) {
+exports.handle = function (url) {
     return new Promise(function(resolve,reject){
             //get the required modules
             var SafeBrowse = require('node-safe-browse');
@@ -22,7 +22,7 @@ function linkAunthenticator(url) {
                     reject(warning);
                 });
         });
-}
+};
 
 
 
