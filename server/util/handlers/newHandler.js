@@ -1,4 +1,4 @@
-/*
+ /*
 * newHandler.js
  */
 
@@ -85,13 +85,12 @@ function createClass(body, user, resolve, reject) {
  * @param resolve: The resolution of the linkHandler.handle function's promise
  * @param reject: The rejection of the linkHandler.handle function's promise
  */
-function createLink(body, user, resolve, reject) { // check if this link should be trusted
-    getTagsIfNotPresent(body);
-
+function createLink(body, user, resolve, reject) {
+    getTagsIfNotPresent(body);// check if this link should be trusted
     var l = new DBRow(lit.tables.LINK);
     l.setValue(lit.fields.TITLE, body.title);
     l.setValue(lit.fields.SUMMARY, body.summary);
-    l.setValue(lit.fields.LINK, body.href); // get this
+    l.setValue(lit.fields.LINK, body.href);// get this
     l.setValue(lit.fields.TAGS, body.tags);
     l.setValue(lit.fields.ADDED_BY, user.getValue(lit.fields.USERNAME));
     l.insert().then(function() {
