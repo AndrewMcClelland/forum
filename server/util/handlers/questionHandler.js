@@ -60,4 +60,5 @@ function getQuestionInfo(question, info, vote) {
     info.question.isSelf = false; //TODO: check if this user owns the post
     info.question.id = question.getValue(lit.fields.ID);
     info.question.voted = vote ? (vote.getValue(lit.fields.VOTE_VALUE) ? "positive" : "negative") : undefined;
+    info.question.answered = question.getValue(lit.fields.ANSWERED);
 }

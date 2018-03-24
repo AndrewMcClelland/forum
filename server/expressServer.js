@@ -53,6 +53,8 @@ server.get(lit.routes.ROOT, function(request, response) { // default link, deliv
 
 
 
+
+
 server.get(lit.routes.QUESTION, function(request, response) { // question page, queried by id
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
@@ -170,6 +172,14 @@ server.get(lit.routes.EVAL, function(request, response) { //allows evaluation of
 server.get(lit.routes.HELP, function(request, response) {
 	response.render('help', {
         title: 'Help',
+        scripts: ['pulse.js'],
+        nav: "search"
+    });
+});
+
+server.get(lit.routes.FIRSTYEAR, function(request, response) {
+    response.render('firstyear', {
+        title: 'First Years',
         scripts: ['pulse.js'],
         nav: "search"
     });
