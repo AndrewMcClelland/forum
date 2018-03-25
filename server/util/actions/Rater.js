@@ -37,6 +37,8 @@ exports.addRating = function (request) {
                 rating.setValue(lit.fields.PARENT, request.body.info.parent);
                 rating.setValue(lit.fields.CONTENT, request.body.info.content ? request.body.info.content : null);
                 rating.setValue(lit.fields.RATING, request.body.info.rating);
+                rating.setValue(lit.fields.NETVOTES, 1);
+                rating.setValue(lit.fields.UPVOTES, 1);
                 rating.insert().then(function () {
                     voter.vote(request.signedCookies.usercookie.userID, rating.getValue(lit.fields.ID), 1); // don't need to wait for this to complete
                     contributor.generateContribution(rating, request.signedCookies.usercookie.userID, lit.tables.RATING);
@@ -133,19 +135,17 @@ exports.getRating = function(username, parentID) {
  *
  * Resolves the JSON object containing all of the ratings stored in an array ordered by the date they were added
  */
-exports.getRatingList = function(parentID, info, resolve) {
-    var ratingList = [];
-    var ratings = new DBRow(lit.tables.RATING);
-    ratings.addQuery(lit.fields.PARENT, parentID);
-    ratings.setLimit(10);
-    ratings.orderBy(lit.fields.TIMESTAMP, lit.sql.query.DESC);
-    ratings.query().then(function() {
-        while (ratings.next()) {
-            ratingList.push(getRatingInfo(ratings));
-        }
-        info.reviews = ratingList;
-        resolve(info);
-   })
+//exports.getRatingList = function(parentID, info, resolve) {
+exports.getRatingsRecursive = function(resolve, reject, ratings, item, info, userID){
+    if(!ratings.next())
+        return resolve(info);
+    else{
+        voter.getVote(userID, ratings.getValue(lit.fields.ID)).then(function(vote){
+            var ratingInfo = getRatingInfo(ratings, vote);
+            info.ratings.push(ratingInfo);
+            exports.getRatingsRecursive(resolve, reject, ratings, item, info, userID);
+        });
+    }
 };
 
 /** Gets the rating information for a rating from its DBRow and formats it to be passed to the client
@@ -153,14 +153,24 @@ exports.getRatingList = function(parentID, info, resolve) {
  * @param rating: the rating DBRow to get info for
  * @returns {{rating, author, date, content, id}}
  */
-function getRatingInfo(rating) {
+//NOT USED AT THE MOMENT
+function getRatingInfo(rating, vote, justAdded) {
+    var hasVoted;
+    if(!justAdded)
+        hasVoted = vote ? (vote.getValue(lit.fields.VOTE_VALUE) ? "positive" : "negative") : undefined;
+    else
+        hasVoted = "positive";
     return {
         rating: rating.getValue(lit.fields.RATING),
         author: rating.getValue(lit.fields.AUTHOR),
         date: rating.getValue(lit.fields.TIMESTAMP),
-        content: rating.getValue(lit.fields.CONTENT),
-        id: rating.getValue(lit.fields.ID)
-    }
+        summary: rating.getValue(lit.fields.CONTENT),
+        id: rating.getValue(lit.fields.ID),
+        votes: rating.getValue(lit.fields.NETVOTES),
+        isSelf: true,
+        //type: lit.tables.RATING,
+        voted: hasVoted
+    };
 }
 
 /** Checks to see if a user has already rated a class

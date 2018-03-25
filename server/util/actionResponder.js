@@ -20,7 +20,9 @@ var voter = require('./actions/Voter');
 var tagger = require('./actions/Tagger');
 var commenter = require('./actions/Commenter');
 var rater = require('./actions/Rater');
+
 var ls = require('./listSerializer');
+
 
 
 exports.respond = function(request) {
