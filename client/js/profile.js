@@ -7,11 +7,11 @@
 
 var commentTemplate ='<div class ="col-sm-12" id="{4}" data-hasvoted="{5}" data-hastype="comment">\
                            <div style="display:inline-block">\
-                                <span class="thumbs-up pointer" tabindex="0">\
+                                <span class="thumbs-up pointer" onclick="vote(this)" onkeypress="vote(this)" tabindex="0">\
                                     <img src="../assets/thumbsUp.svg" class="svg">\
                                 </span>\
                                 <span id="votes" class="{0}">{1}</span>\
-                                <span class="thumbs-down pointer" tabindex="0">\
+                                <span class="thumbs-down pointer" onclick="vote(this)" onkeypress="vote(this)" tabindex="0">\
                                     <img src="../assets/thumbsDown.svg" class="svg">\
                                 </span>\
                            </div>\
@@ -21,7 +21,7 @@ var commentTemplate ='<div class ="col-sm-12" id="{4}" data-hasvoted="{5}" data-
                                <a href="/question?id={6}">View</a>\
                                <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                               <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                               <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                            </div>\
                            <hr/>\
                        </div>';
@@ -38,7 +38,7 @@ var reviewTemplate = '<div class="col-sm-12" id="{3}" data-hasvoted="{4}" data-h
                         <div class="action-links">\
                             <a href="/class?id={5}">View</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                         </div>\
                         <hr/>\
                       </div>';

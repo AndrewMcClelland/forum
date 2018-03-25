@@ -43,7 +43,7 @@ var classTemplate = '<div class="info-block clearfix">\
                             <div class="action-links">\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                             </div>\
                             {3}\
                             </div>\

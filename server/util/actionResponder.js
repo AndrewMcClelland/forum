@@ -21,6 +21,9 @@ var tagger = require('./actions/Tagger');
 var commenter = require('./actions/Commenter');
 var rater = require('./actions/Rater');
 
+var ls = require('./listSerializer');
+
+
 
 exports.respond = function(request) {
     return new Promise(function(resolve, reject) {
@@ -137,11 +140,11 @@ function comment(request) {
 
 function rate(request) {
     return new Promise(function(resolve, reject){
-        if (request.body.sub == "add")
+        if (request.body.sub === "add")
             rater.addRating(request).then(function(res) {resolve(res)}, function() {reject(false)});
-        else if (request.body.sub == "edit")
+        else if (request.body.sub === "edit")
             rater.editRating(request).then(function() {resolve(true)}, function() {reject(false)});
-        else if (request.body.sub == "delete")
+        else if (request.body.sub === "delete")
             rater.deleteRating(request).then(function() {resolve(true)}, function() {reject(false)});
         else
             log.error("Invalid request for rating");
@@ -149,8 +152,5 @@ function rate(request) {
 }
 
 function getMore(request) {
-    return new Promise(function(resolve, reject) {
-        getter.getMore(request).then(function(res){resolve(res)}, function() {reject(false)})
-            .catch(function(err) {console.error('Getter getMore error: ' + err)})
-    })
+    return ls.getListPageItems(request, request.body.currentNum);
 }

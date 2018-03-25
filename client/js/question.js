@@ -20,7 +20,7 @@ var questionTemplate = '<div class="info-block row" id="{9}" data-hasvoted="{10}
                                 <div class="action-links">\
                                     <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                     <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                    <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                    <a href="javascript: void 0;" onclick="triggerReportModal(this)" >Report</a>\
                                 </div>\
                                 {8}\
                                 <div class="comment-button-wrap">\
@@ -89,7 +89,7 @@ function fillInQuestionHeader(details) {
 function addComments(comments) {
     var template;
 
-    if (comments.length == 0) {
+    if (comments.length === 0) {
         $('#getMore').hide();
         $('#foot').append("<h6 class='info-block'>Nothing here yet! Add a comment to get the discussion going!</h6>");
         return;

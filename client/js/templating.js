@@ -27,11 +27,13 @@ var level1CommentTemplate = '<div class="col-sm-12" id="{6}" data-hasvoted="{7}"
                                 {8}\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                                 </div>\
                                 {9}\
                                 <hr/>\
                              </div>';
+
+
 
 var level2CommentTemplate = '<div class="info-block comment-block media" id="{6}" data-hasvoted="{7}" data-hastype="comment">\
                                 <div style="display:inline-block">\
@@ -48,7 +50,7 @@ var level2CommentTemplate = '<div class="info-block comment-block media" id="{6}
                                 <div class="action-links">\
                                 <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                                 <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                                <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                                <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                                 </div>\
                                 <hr />\
                             </div>';
@@ -78,7 +80,7 @@ var postTemplate = '<div class="col-sm-12" id="{10}" data-hasvoted="{11}" data-h
                             <a href="/question?id={8}">View</a>\
                             <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                         </div>\
                         {9}\
                         <hr>\
@@ -104,7 +106,7 @@ var linkTemplate = '<div class="col-sm-12" id="{10}" data-hasvoted="{11}" data-h
                             <a href="/link?id={8}">View</a>\
                             <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                         </div>\
                         {9}\
                         <hr>\
@@ -124,7 +126,7 @@ var classTemplate = '<div class="col-sm-12" id="{10}" data-hastype="class">\
                             <a href="/class?id={8}">View</a>\
                             <a href="javascript: void 0;" onclick="subscribe(this)">Subscribe</a>\
                             <a href="javascript: void 0;" onclick="save(this)">Save</a>\
-                            <a href="javascript: void 0;" onclick="report(this)">Report</a>\
+                            <a href="javascript: void 0;" onclick="triggerReportModal(this)">Report</a>\
                         </div>\
                         {9}\
                         <hr>\
@@ -198,7 +200,7 @@ function getTags(tagArray) {
 function getDateString(date) {
     if (!date)
         return undefined;
-    else if (date == "Just Now")
+    else if (date === "Just Now")
         return date;
 
     return date.slice(0, date.indexOf('T'));
@@ -374,15 +376,15 @@ function buildList(items, target) {
         if (it.voted)
             updateItemsWithPolarity.push({id: it.id, polarity: it.voted});
 
-        if (it.type == "post")
+        if (it.type === "post")
             filledTemplate = fillPostTemplate(it);
-        else if (it.type == "link")
+        else if (it.type === "link")
             filledTemplate = fillLinkTemplate(it);
-        else if (it.type == "class")
+        else if (it.type === "class")
             filledTemplate = fillClassTemplate(it);
-        else if (it.type == "comment")
+        else if (it.type === "comment")
             filledTemplate = fillCommentTemplate(it);
-        else if (it.type == "rating")
+        else if (it.type === "rating")
             filledTemplate = fillReviewTemplate(it);
 
         if (filledTemplate)

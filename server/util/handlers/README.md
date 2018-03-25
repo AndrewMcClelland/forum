@@ -13,9 +13,6 @@ A file that contains common functions to get information about what data to get 
 #### linkHandler.js
 Handles requests from the link page and returns the link information and its relevant comments.
 
-#### listHandler.js
-Handles requests from the class page and returns a list of items that correspond to a user's query.
-
 #### newHandler.js
 Handles requests from the new page to _enter_ data into the database. This file differs as it puts data into the database
 instead of reading it and sending it back to the page. This file returns the id of the new item so that the new page can

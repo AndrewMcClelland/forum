@@ -13,8 +13,6 @@ var log = require('./util/log');
 var lit = require('./util/Literals.js');
 var PM = require('./util/PropertyManager');
 
-var creationFailed = false;
-
 setup(); // let's set everything up
 
 /**

@@ -41,7 +41,7 @@ function showAskAQuestion() {
 }
 
 // indicate the index of the posts the page has received (they are returned in sets of 20)
-var lastGotten = 0;
+var lastGotten = 1;
 
 /**
  * getMore function exclusively for the list page.
@@ -64,8 +64,7 @@ function getMore() {
         data: JSON.stringify(content)
     }).done(function(data) {
         if (data) {
-            buildList(data[0]);
-            svgConverter();
+            svgConvertAndBuildList(data);
             lastGotten++;
         }
         else {
@@ -77,6 +76,7 @@ function getMore() {
         console.log(err);
     });
 }
+
 
 // render the page
 $(document).ready(whenLoaded);

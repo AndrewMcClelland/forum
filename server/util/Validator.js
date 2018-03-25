@@ -124,7 +124,7 @@ exports.hasRole = function(userID, role) {
 
 		var user = new DBRow(lit.tables.USER);
 		user.getRow(userID).then(function() {
-			if (user.count() == 0)
+			if (user.count() === 0)
                 return reject(false);
 
 			if(user.getValue(lit.fields.PRIVILEGE).includes(role))
@@ -159,7 +159,7 @@ exports.validateUser = function(request) {
 		}
 
 		user.query().then(function() {
-			if (user.count() == 0)
+			if (user.count() === 0)
 				reject(false);
 			else
 				resolve(true);
@@ -182,7 +182,7 @@ exports.validateItemExistence = function(request) {
     return new Promise(function(resolve, reject) {
         var item = new DBRow(urlTableMap[request.path]); // get the correct table name from the urlTableMap
 		item.getRow(request.query.id).then(function() {
-			if (item.count() == 0)
+			if (item.count() === 0)
 				reject();
 			else
 				resolve();

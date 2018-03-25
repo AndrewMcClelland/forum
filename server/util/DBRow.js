@@ -25,13 +25,14 @@ var lit = require('./Literals.js');
 exports.DBRow = function(table) {
 	var querySort = "";
 	var returnLimit = "";
+	var returnOffset = "";
 	var currentIndex = -1;
 	var rows = [];
 	var currentRow = {}; // left as an empty object in case we are creating a new row
 	var queries = [];
 	var registeredProperties = [];
 
-	this.setId = true; // allows setting of rows manually
+	this.setId = true; // allows setting row ids manually
 
 	if (!table) {
 		log.error("No table was specified for the DBRow, all queries will fail!! Object instantiation terminated.");
@@ -75,7 +76,7 @@ exports.DBRow = function(table) {
 	 ** Note: if a row does not match this query, undefined will be returned and the promise is not rejected.
 	**/
 	this.query = function() {
-		var qs =  qb.query(table, queries, registeredProperties) + ' ' + querySort + ' ' + returnLimit;
+		var qs =  qb.query(table, queries, registeredProperties) + ' ' + querySort + ' ' + returnLimit + ' ' + returnOffset;
 		log.log("QUERY with query string: '" + qs + "'");
 		return new Promise(function(resolve, reject) {
 			dbm.query(qs).then(function(row) {
@@ -173,7 +174,7 @@ exports.DBRow = function(table) {
 	 **
 	 ** Adds a field-value pair to filter the rows of the table by
 	**/
-	this.addQuery = function(property, value) { // with three arguments it will be interpreted as operator (OR, AND) property, value
+	this.addQuery = function(property, value) { // with three arguments it will be interpreted as property, value, operator (=, > .. etc)
 		if (arguments.length === 2)
             addQueryAndRegisterProperty(table, property, lit.sql.query.EQUALS, value, lit.sql.query.AND);
 		else if (arguments.length === 3)
@@ -253,6 +254,14 @@ exports.DBRow = function(table) {
 		returnLimit = qb.escapeLimit(limit);
 	};
 
+    /**
+	 *
+     * @param offset {number}: The number of rows to offset
+     */
+	this.setOffset = function(offset) {
+		returnOffset = qb.escapeOffset(offset);
+	};
+
 	/** next()
 	 ** No input parameters
 	 ** returns true if there is another row object in the rows array
@@ -299,6 +308,17 @@ exports.DBRow = function(table) {
      */
 	this.getTable = function() {
 		return table;
+	};
+
+	this.toString = function() {
+		if (rows.length > 0)
+			return "Queried DBRow object with " + rows.length + " rows. Current row index is " + currentIndex;
+		else if (Object.keys(currentRow).length !== 0)
+			return "Uninserted DBRow with current object: " + JSON.stringify(currentRow);
+		else if (queries.length > 0)
+			return "Unqueried DBRow with " + queries.length + " query(ies)";
+		else
+			return "New DBRow Object, no queries, values or rows";
 	};
 
 	function addQueryAndRegisterProperty(table, property, operator, value, joiner) {

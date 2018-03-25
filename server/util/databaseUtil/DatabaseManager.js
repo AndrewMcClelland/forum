@@ -64,7 +64,7 @@ function DatabaseManager() {
 	};
 
 	this.useDB = function(DBName) {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function(resolve) {
 			pool = mysql.createPool({
 				host: databaseInformation[lit.sql.HOST],
 				user: databaseInformation[lit.sql.USER],
@@ -74,6 +74,10 @@ function DatabaseManager() {
 			});
 			resolve();
 		});
+	};
+
+	this.kill = function() {
+		pool.end();
 	};
 
 	function logSQLIfRequired(str) {

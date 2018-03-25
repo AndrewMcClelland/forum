@@ -186,14 +186,14 @@ a:focus {
 
 .search-bar {
   background-color: white;
-  width: 900px;
+  width: 90%;
   height: 50px;
   margin: auto;
   border-radius: 10px;
 }
 
 .search-bar input {
-  width: 850px;
+  width: 80%;
   height: inherit;
   background-color: transparent;
   border: none;
@@ -641,7 +641,7 @@ footer .wrap div {
  * Thanks to IAMSAIJO
  * https://codemyui.com/checkbox-tick-animation-click/
  */
-input[type=checkbox] {
+input[type=checkbox], input[type=radio] {
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
@@ -660,7 +660,7 @@ input[type=checkbox] {
 }
 
 
-input[type=checkbox]:before {
+input[type=checkbox]:before, input[type=radio]:before {
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
   content: "";
@@ -674,7 +674,7 @@ input[type=checkbox]:before {
   box-sizing: border-box;
 }
 
-input[type=checkbox]:checked:before {
+input[type=checkbox]:checked:before, input[type=radio]:checked:before {
   -ms-transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
@@ -684,17 +684,17 @@ input[type=checkbox]:checked:before {
   border-right-style: none
 }
 
-input[type=checkbox]:focus:before,
-input[type=checkbox]:hover:before{
+input[type=checkbox]:focus:before, input[type=radio]:focus:before,
+input[type=checkbox]:hover:before, input[type=radio]:hover:before {
   border-color: #FF9200;
 }
 
-input[type=checkbox]:checked:focus:before,
-input[type=checkbox]:checked:hover:before {
+input[type=checkbox]:checked:focus:before, input[type=radio]:checked:focus:before,
+input[type=checkbox]:checked:hover:before,input[type=radio]:checked:hover:before {
   border-color: #FF9200;
 }
 
-input[type=checkbox]:after {
+input[type=checkbox]:after,input[type=radio]:after {
   content: "";
   position: absolute;
   top: -4px;
@@ -713,14 +713,24 @@ textarea.modal-plaintext {
   height: 80%;
 }
 
-/* Fun Css*/
-.rainbows
-color: white
-text-shadow: rainbow-shadow(50, 0.2, 60%, 45%)
+#right-hand-button, .space-left {
+  margin-left: 2px;
+}
 
-@function rainbow-shadow ($cycle, $depth, $sat, $bri)
-$value: ''
-@for $i from 1 through $cycle
-$value: $value + '-#{$depth * $i}px #{$depth * $i}px 0 hsla(#{$i * (360/$cycle)}, #{$sat}, #{$bri}, 1), '
-$value: $value + '0px 0px 0px hsla(0,0%,0%,0)'
-@return unquote($value)
+
+/* Fun Css*/
+/* THIS IS SCSS NOT CSS
+
+@function rainbow-shadow ($cycle, $depth, $sat, $bri) {
+  $value: '';
+  @for $ i from 1 through $ {
+    cycle $value: $ value+ '-#{$depth * $i}px #{$depth * $i}px 0 hsla(#{$i * (360/$cycle)}, #{$sat}, #{$bri}, 1), ' $value: $ value+ '0px 0px 0px hsla(0,0%,0%,0)'
+  }
+  @return unquote($ value)
+}
+
+.rainbows {
+  color: white;
+  text-shadow: rainbow-shadow(50, 0.2, 60%, 45%);
+}
+*/

@@ -336,7 +336,7 @@
 				"type": "uniqueidentifier",
 				"primaryKey": "true"
 			},
-			"datetime": {
+			"timestamp": {
 				"type": "datetime",
 				"default": "CURRENT_TIMESTAMP"
 			},

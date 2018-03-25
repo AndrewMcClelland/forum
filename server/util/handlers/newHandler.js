@@ -1,4 +1,4 @@
-/*
+ /*
 * newHandler.js
  */
 
@@ -69,7 +69,8 @@ function createClass(body, user, resolve, reject) {
 
     c.insert().then(function() {
         vote(user, c, resolve); // if we make it this far we will always resolve
-        contributor.generateContribution(c, user.getValue(lit.fields.ID), lit.tables.CLASS); // we can get away with creating the contribution in parallel in this case
+        // we can get away with creating the contribution and item in parallel in this case
+        contributor.generateContribution(c, user.getValue(lit.fields.ID), lit.tables.CLASS);
         generateItem(c, user, lit.tables.CLASS); //ditto the item
     }, function(err) {
         log.error(err);
@@ -84,19 +85,18 @@ function createClass(body, user, resolve, reject) {
  * @param resolve: The resolution of the linkHandler.handle function's promise
  * @param reject: The rejection of the linkHandler.handle function's promise
  */
-function createLink(body, user, resolve, reject) { // check if this link should be trusted
-    getTagsIfNotPresent(body);
-
+function createLink(body, user, resolve, reject) {
+    getTagsIfNotPresent(body);// check if this link should be trusted
     var l = new DBRow(lit.tables.LINK);
     l.setValue(lit.fields.TITLE, body.title);
     l.setValue(lit.fields.SUMMARY, body.summary);
-    l.setValue(lit.fields.LINK, body.href); // get this
+    l.setValue(lit.fields.LINK, body.href);// get this
     l.setValue(lit.fields.TAGS, body.tags);
     l.setValue(lit.fields.ADDED_BY, user.getValue(lit.fields.USERNAME));
     l.insert().then(function() {
         vote(user, l, resolve); // if we make it this far we will always resolve
-        generateContribution(l, user, lit.tables.LINK); // we can get away with creating the contribution in parallel in this case
-        contributor.generateItem(l, user.getValue(lit.fields.ID), lit.tables.LINK); // ditto the item
+        contributor.generateContribution(l, user.getValue(lit.fields.ID), lit.tables.LINK);
+        generateItem(l, user, lit.tables.LINK); // ditto the item
     }, function(err) {
         log.error(err);
         reject("Error entering the new link");
@@ -121,7 +121,7 @@ function createQuestion(body, user, resolve, reject) { // also create a vote
 
     q.insert().then(function() {
         vote(user, q, resolve); // if we make it this far we will always resolve
-        contributor.generateContribution(q, user.getValue(lit.fields.ID), lit.tables.POST); // we can get away with creating the contribution in parallel in this case
+        contributor.generateContribution(q, user.getValue(lit.fields.ID), lit.tables.POST);
         generateItem(q, user, lit.tables.POST); //ditto the item
     }, function(err) {
         log.error(err);
@@ -132,7 +132,7 @@ function createQuestion(body, user, resolve, reject) { // also create a vote
 /** Creates tags for items that are being inserted with no tags
  *
  * @param body: The JSON object containing information about the item to be created
- * TODO: needs to be fully implemented
+ * TODO: needs to be fully implemented -- we need an auto-tagger (I think Carson has one)
  */
 function getTagsIfNotPresent(body) {
     if (!body.tags)

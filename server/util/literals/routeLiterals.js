@@ -28,5 +28,6 @@ module.exports = {
     LINK: "/link",
     SETTINGS: "/settings",
     ADVANCED_SEARCH: "/advanced",
-    REPORT: "/report"
+    REPORT: "/report",
+    FIRSTYEAR: "/firstyear"
 };

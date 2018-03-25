@@ -9,9 +9,12 @@ block content
       input#search
   br
   #toggle.centered
+    a(onclick='triggerModal("quickHelp");', href="javascript:void(0)") First Time?
+    br
     a(href='#', onclick='showOptions()') See Search Options
   #options.centered.hidden
     p What Would You Like To Search For?
+    br
     .btn-group.centered(role='group', aria-label='Basic example')
       button#all.btn.btn-secondary.active(type='button', onclick="toggleSelection('all')") All
       button#posts.btn.btn-secondary(type='button', onclick="toggleSelection('posts')") Posts
@@ -23,8 +26,8 @@ block content
     a(href='/advanced') Advanced Search
   .row.featured-content
     .col-sm-6.col-lg-3.featured-item
-      a(href='/list')
-        p First Year Courses
+      a(href='/firstyear')
+        p First Year Area
     .col-sm-6.col-lg-3.featured-item
       a(href='/list')
         p Recently Asked

@@ -89,7 +89,6 @@ exports.recursiveGetWithVotes = function (resolve, reject, rowsToGet, action, us
 
         }, function (err) {
             reject(actionArgs, err);
-
         });
     }
 };

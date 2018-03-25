@@ -14,6 +14,7 @@ var requestor = require('./util/requestResponder');
 var action = require('./util/actionResponder');
 var lit = require('./util/Literals.js');
 var PM = require('./util/PropertyManager');
+var loginMiddleware = require('./util/middleware/login');
 
 const PORT = PM.getConfigProperty(lit.config.PORT);
 var server = express();
@@ -27,7 +28,8 @@ server.use('/assets', express.static('../client/assets'));
 server.use(cp(lit.sql.SIMPLE_SECRET)); //simple secret is an example password
 server.use(bp.json());
 
-var isInProduction = (PM.getConfigProperty(lit.config.PRODUCTION) === true);
+// include the custom middleware
+server.use(loginMiddleware.loginRedirect);
 
 // Set the templating engine to use Pug
 server.set('views', '../client/views');
@@ -42,9 +44,6 @@ server.set('view engine', 'pug');
 */
 
 server.get(lit.routes.ROOT, function(request, response) { // default link, delivers landing page
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN);
-
     response.render('index',{
         title: 'Home',
         scripts: ["index.js"],
@@ -52,14 +51,15 @@ server.get(lit.routes.ROOT, function(request, response) { // default link, deliv
     });
 });
 
-server.get(lit.routes.QUESTION, function(request, response) { // question page, queried by id
-	if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 
+
+
+
+server.get(lit.routes.QUESTION, function(request, response) { // question page, queried by id
 	validator.validateItemExistence(request).then(function() {
         response.render('question', {
             title: 'Question',
-            scripts: ['templating.js', 'question.js', 'pulse.js']
+            scripts: ['templating.js', 'question.js', 'pulse.js','reportModal.js']
         });
 	}).catch(function() {
         response.render('notFound', {
@@ -71,9 +71,6 @@ server.get(lit.routes.QUESTION, function(request, response) { // question page, 
 });
 
 server.get(lit.routes.ABOUT, function(request, response) { //about page
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
 	response.render('about', {
         title: 'About',
         scripts: ['pulse.js'],
@@ -82,30 +79,23 @@ server.get(lit.routes.ABOUT, function(request, response) { //about page
 });
 
 server.get(lit.routes.NEW, function(request, response) { // place where new things can be added
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
 	response.render('new', {
         title: 'New Entry',
-        scripts: ['new.js', 'pulse.js'],
+        scripts: ['new.js', 'pulse.js','reportModal.js'],
         nav: "menuOnly"
     });
 });
 
 server.get(lit.routes.LIST, function(request, response) { //return the a default most recent list of questions
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
 	response.render('list', {
         title: 'Questions',
-        scripts: ['pulse.js', 'templating.js', 'list.js'],
+        scripts: ['pulse.js', 'templating.js', 'list.js','reportModal.js'],
+
         nav: "search"
     });
 });
 
 server.get(lit.routes.PROFILE, function(request, response) { //user home page
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
 	if (!compare.isEmpty(request.query)) {
 		validator.validateUser(request).then(function() {
 			response.render('profile', {
@@ -133,7 +123,7 @@ server.get(lit.routes.PROFILE, function(request, response) { //user home page
 });
 
 server.get(lit.routes.LOGIN, function(request, response) {
-	if (compare.isEmpty(request.signedCookies))
+	if (request.signedCookies.usercookie === undefined)
         response.render('login', {
             title: 'Login',
             scripts: ['login.js']
@@ -143,57 +133,43 @@ server.get(lit.routes.LOGIN, function(request, response) {
 });
 
 server.get(lit.routes.GUIDELINES, function(request, response) { // mock login page
-	if (compare.isEmpty(request.signedCookies))
-        response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-	else
-		response.render('guidelines', {
-            title: 'Guidelines',
-            nav: "search"
-        });
+    response.render('guidelines', {
+        title: 'Guidelines',
+        nav: "search"
+    });
 });
 
 server.get(lit.routes.DEV, function(request, response) {
-	if (compare.isEmpty(request.signedCookies))
-		response.redirect(lit.routes.LOGIN);
-	else {
-		validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
-			response.render('dev', {
-                title: 'Development',
-                nav: "search"
-            });
-		}, function() {
-            response.render('notFound', {
-                title: 'Not Found',
-                scripts: ['notFound.js'],
-                nav: "search"
-            })
-		});
-	}
+    validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
+        response.render('dev', {
+            title: 'Development',
+            nav: "search"
+        });
+    }, function() {
+        response.render('notFound', {
+            title: 'Not Found',
+            scripts: ['notFound.js'],
+            nav: "search"
+        })
+    });
 });
 
 server.get(lit.routes.EVAL, function(request, response) { //allows evaluation of server side code from the client
-	if (compare.isEmpty(request.signedCookies))
-		response.redirect(lit.routes.LOGIN);
-	else {
-		validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
-			response.render('eval', {
-                title: 'Evaluate',
-                nav: "search"
-            });
-        }, function() {
-              response.render('notFound', {
-                  title: 'Not Found',
-                  scripts: ['notFound.js'],
-                  nav: "search"
-              });
-		});
-	}
+    validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
+        response.render('eval', {
+            title: 'Evaluate',
+            nav: "search"
+        });
+    }, function() {
+          response.render('notFound', {
+              title: 'Not Found',
+              scripts: ['notFound.js'],
+              nav: "search"
+          });
+    });
 });
 
 server.get(lit.routes.HELP, function(request, response) {
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
 	response.render('help', {
         title: 'Help',
         scripts: ['pulse.js'],
@@ -201,14 +177,19 @@ server.get(lit.routes.HELP, function(request, response) {
     });
 });
 
-server.get(lit.routes.CLASS, function(request, response) {
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
+server.get(lit.routes.FIRSTYEAR, function(request, response) {
+    response.render('firstyear', {
+        title: 'First Years',
+        scripts: ['pulse.js'],
+        nav: "search"
+    });
+});
 
+server.get(lit.routes.CLASS, function(request, response) {
     validator.validateItemExistence(request).then(function() {
         response.render('class', {
             title: 'Class',
-            scripts: ['templating.js', 'class.js', 'pulse.js'],
+            scripts: ['templating.js', 'class.js', 'pulse.js','reportModal.js'],
             nav: "search"
         });
     }).catch(function() {
@@ -221,13 +202,10 @@ server.get(lit.routes.CLASS, function(request, response) {
 });
 
 server.get(lit.routes.LINK, function(request, response) {
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
     validator.validateItemExistence(request).then(function() {
         response.render('link', {
             title: 'Link',
-            scripts: ['templating.js', 'link.js', 'pulse.js'],
+            scripts: ['templating.js', 'link.js', 'pulse.js','reportModal.js'],
             nav: "search"
         });
     }).catch(function() {
@@ -240,9 +218,6 @@ server.get(lit.routes.LINK, function(request, response) {
 });
 
 server.get(lit.routes.SETTINGS, function(request, response) {
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
     response.render('settings', {
         title: 'Settings',
         scripts: ['pulse.js', 'templating.js', 'settings.js'],
@@ -251,9 +226,6 @@ server.get(lit.routes.SETTINGS, function(request, response) {
 });
 
 server.get(lit.routes.ADVANCED_SEARCH, function(request, response) {
-    if (compare.isEmpty(request.signedCookies))
-        return response.redirect(lit.routes.LOGIN + '?redirect=' + request.url);
-
     response.render('advanced', {
         title: 'Search',
         scripts: ['pulse.js', 'advanced.js'],
@@ -268,51 +240,39 @@ server.get(lit.routes.ADVANCED_SEARCH, function(request, response) {
 */
 
 server.post(lit.routes.LOGIN, function(request, response) {
-	if (!request.body) {
-		response.send(false);
-		return;
-	}
+    if (request.signedCookies.usercookie !== undefined || !request.body)
+        return response.send(false);
 
 	validator.loginAndCreateSession(request.body).then(function(result) {
 		response.cookie(lit.USER_COOKIE, result, {signed: true});
     	response.send(true); // REDIRECT MUST OCCUR ON THE CLIENT AFTER A COOKIE IS SUCCESSFULLY SET
-
 	}, function() {
-		response.send(false);
+		response.send({message: "Bad Login Information", data: false});
 	}).catch(function(err) {
+        log.error(err.message);
+        response.status(500).send({message: "Internal Error", data: false});
+    });
+});
+
+server.post(lit.routes.EVAL, function(request, response) {
+    validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
+        var env = new Environment(); // a new disposable execution environment
+        env.execute(request.body.code).then(function(res) {
+            response.send(res);
+
+        }, function(err) {
+            response.send(err);
+        });
+    }, function() {
+        response.send("You are not authorized for this role");
+
+    }).catch(function(err) {
         log.error(err.message);
         response.status(500).send("Internal Error");
     });
 });
 
-server.post(lit.routes.EVAL, function(request, response) {
-	if (compare.isEmpty(request.signedCookies))
-		response.redirect(lit.routes.LOGIN);
-	else {
-		validator.hasRole(request.signedCookies.usercookie.userID, lit.ADMIN).then(function() {
-			var env = new Environment(); // a new disposable execution environment
-			env.execute(request.body.code).then(function(res) {
-				response.send(res);
-
-			}, function(err) {
-				response.send(err);
-			});
-		}, function() {
-			response.send("You are not authorized for this role");
-
-		}).catch(function(err) {
-            log.error(err.message);
-            response.status(500).send("Internal Error");
-        });
-	}
-});
-
 server.post(lit.routes.LOGOUT, function(request, response) { // a place to post exclusively for logout requests
-	if (compare.isEmpty(request.signedCookies)) {
-		response.redirect(lit.routes.LOGIN); //then there's nothing to sign out of
-		return;
-	}
-
 	if (request.body.logout === true) {
 		validator.logout(request.signedCookies.usercookie).then(function() {
 			response.clearCookie(lit.USER_COOKIE);
@@ -327,10 +287,6 @@ server.post(lit.routes.LOGOUT, function(request, response) { // a place to post 
 });
 
 server.post(lit.routes.ACTION, function(request, response) {
-	if (compare.isEmpty(request.signedCookies)){ // if not signed in, you can't vote
-		response.redirect(lit.routes.LOGIN); //tell the client to tell the user they need to login
-		return;
-	}
 	action.respond(request).then(function(res) {
         response.send(res);
 	}, function(res) {
@@ -339,14 +295,9 @@ server.post(lit.routes.ACTION, function(request, response) {
         log.error(err.message);
         response.status(500).send("Internal Error");
     });
-
 });
 
 server.post(lit.routes.INFO, function(request, response) {
-	if (compare.isEmpty(request.signedCookies)) { //if you're not signed in you can't get information
-		response.redirect(lit.routes.LOGIN); // tell them to log in
-		return;
-	}
 	requestor.parseRequest(request).then(function(resultToReturn) {
 		response.send(resultToReturn);
 

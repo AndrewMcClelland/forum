@@ -32,8 +32,8 @@ function logout() {
  */
 function subscribe(el) {
     el = $(el);
-    var itemID = el.parent().parent().attr('id');
-    var itemType = el.parent().parent().attr('data-hastype');
+    var itemID = getItemAttr(el, 'id');
+    var itemType =  getItemAttr(el, 'data-hastype');
 
     // send the subscription to the server
     $.ajax({
@@ -44,10 +44,12 @@ function subscribe(el) {
     }).done(function(data) {
         if (data) {
             // TODO: indicate the success, change "subscribe" to "unsubscribe"
+            triggerModal('actionSuccess');
             console.log("Successful subscription");
         }
         else {
             // TODO: display some error message
+            triggerModal('actionFailed');
             console.log(data);
         }
     }).fail(function(err) {
@@ -61,8 +63,8 @@ function subscribe(el) {
  */
 function save(el) {
     el = $(el);
-    var itemID = el.parent().parent().attr('id');
-    var itemType = el.parent().parent().attr('data-hastype');
+    var itemID = getItemAttr(el, 'id');
+    var itemType = getItemAttr(el, 'data-hastype');
 
     // send the save to the server
     $.ajax({
@@ -73,10 +75,12 @@ function save(el) {
     }).done(function(data) {
         if (data) {
             // TODO: indicate the success, change "save" to "unsave"
+            triggerModal('actionSuccess');
             console.log("Successful save");
         }
         else {
             // TODO: display some error message
+            triggerModal('actionFailed');
             console.log(data);
         }
     }).fail(function(err) {
@@ -90,23 +94,23 @@ function save(el) {
  */
 function vote(el) {
     el = $(el);
-    var itemID = el.parent().parent().attr('id');
+    var itemID = getItemAttr(el, 'id');
     var voteValue;
-    var hasVoted = el.parent().parent().attr('data-hasvoted');
-    var itemType = el.parent().parent().attr('data-hastype');
+    var hasVoted = getItemAttr(el, 'data-hasvoted');
+    var itemType = getItemAttr(el, 'data-hastype');
     var thumbsUpFills = el.parent().children('.thumbs-up').children().children().children().children(); // I <3 jQuery
     var thumbsDownFills = el.parent().children('.thumbs-down').children().children().children();
     var votes = el.parent().children('#votes');
     var currentVotes = votes[0].innerHTML;
     var voteCount;
 
-    if (el.hasClass('thumbs-up') && hasVoted != 'positive') {
+    if (el.hasClass('thumbs-up') && hasVoted !== 'positive') {
         voteValue = 1;
         if(thumbsDownFills.hasClass('negative'))
             thumbsDownFills.removeClass('negative');
 
         thumbsUpFills.addClass('positive');
-        if (hasVoted == 'negative')
+        if (hasVoted === 'negative')
             voteCount = Number(currentVotes) + 2;
         else
             voteCount = ++currentVotes;
@@ -115,13 +119,13 @@ function vote(el) {
 
         el.parent().parent().attr('data-hasVoted', 'positive');
     }
-    else if (el.hasClass('thumbs-down') && hasVoted != 'negative') {
+    else if (el.hasClass('thumbs-down') && hasVoted !== 'negative') {
         voteValue = 0;
         if(thumbsUpFills.hasClass('positive'))
             thumbsUpFills.removeClass('positive');
 
         thumbsDownFills.addClass('negative');
-        if (hasVoted == 'positive')
+        if (hasVoted === 'positive')
             voteCount = Number(currentVotes) - 2;
         else
             voteCount = --currentVotes;
@@ -133,7 +137,7 @@ function vote(el) {
     else
         return; // they already voted on the thumb they selected
 
-    hasVoted = hasVoted == 'positive' || hasVoted == 'negative'; // true if data-hasvoted has been set, false otherwise
+    hasVoted = hasVoted === 'positive' || hasVoted === 'negative'; // true if data-hasvoted has been set, false otherwise
 
     // send the vote to the server
     $.ajax({
@@ -142,13 +146,9 @@ function vote(el) {
         contentType: 'application/json',
         data: JSON.stringify({itemId: itemID, value: voteValue, voted: hasVoted, type: itemType, action:"vote"})
     }).done(function(data) {
-        if (data) {
+        if (!data) {
             // TODO: indicate the success
-            console.log("Successful vote");
-        }
-        else {
-            // TODO: display some error message
-            console.log(data);
+            $('#actionFailed').modal('show');
         }
     }).fail(function(err) {
         console.error(err);
@@ -236,11 +236,11 @@ function reply(el) {
     el = $(el);
     var editorID = el.parent().children('textarea').attr('id');
     var text = CKEDITOR.instances[editorID].getData();
-    var replyLevel = (el.parent().parent().attr('data-hastype') == "comment") ? 1 : 0;
+    var replyLevel = (el.parent().parent().attr('data-hastype') === "comment") ? 1 : 0;
     var parentID;
 
     if (replyLevel)
-        parentID = el.parent().parent().attr('id');
+        parentID = getItemAttr(el, 'id');
 
     if (!text.trim())
         return; // if there's no body to the comment don't add it
@@ -345,7 +345,7 @@ function updateElements() {
             continue;
 
         var update = updateItemsWithPolarity[it];
-        if (update.polarity == 'positive')
+        if (update.polarity === 'positive')
             $('#' + update.id + ' .thumbs-up').children().children().children().children().addClass('positive');
         else
             $('#' + update.id + ' .thumbs-down').children().children().children().addClass('negative');
@@ -380,7 +380,7 @@ function appendOnkeydown() {
     var searcher = $('#search');
     if (searcher)
         searcher.keypress(function(e) {
-            if (e.which == 13) { // 13 = the enter key
+            if (e.which === 13) { // 13 = the enter key
                 search(false, searcher.val())
             }
         });
@@ -498,4 +498,19 @@ function sendFeedback() {
     }
 
     AJAXCall('/info', content, false, onComplete, onComplete, onFailure);
+}
+
+$(".modal").on("show", function() {
+    document.activeElement.blur();
+    $(this).find(".modal-body :input:visible").first().focus();
+});
+
+/**
+ *
+ * @param el
+ * @param attr
+ * @return {string} The id of the item
+ */
+function getItemAttr(el, attr) {
+    return el.parent().parent().attr(attr);
 }

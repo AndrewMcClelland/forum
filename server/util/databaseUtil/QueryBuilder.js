@@ -14,9 +14,6 @@ var escaper = require('./QueryEscaper');
 var lit = require('./../Literals.js');
 var compare = require('./../Compare');
 
-// the operators which are allowed to be used to query the database TODO: implement the 'in' and 'between' operators
-const allowedOperators = ["like", "<=", ">=", ">", "<", "=", "!=", "<>"];
-
 /** Creates an escaped "update" query provided the table and database object JSON
  *
  * @param table: The table that the row that's being updated is on
@@ -99,6 +96,9 @@ function breakdownQueryObjects(qArr) {
 	var finalStr = '';
 	for (var i in qArr) {
 		if (qArr.hasOwnProperty(i)) {
+			if (qArr[i] === undefined)
+				return undefined;
+
             if (parseInt(i) === 0)
                 finalStr += getAsSingleString(qArr[i], true);
             else
@@ -119,6 +119,8 @@ function breakdownQueryObjects(qArr) {
 function getAsSingleString(obj, isFirst) {
 	var field, operator, value, joiner;
     var returnString = '';
+    if (obj === undefined)
+    	return undefined;
 
     [field, operator, value, joiner] = obj.getQueryDataArray();
     if (!isFirst)
@@ -151,11 +153,15 @@ exports.escapeLimit = function(limitNum) {
 	return "LIMIT " + resolveObjectType(limitNum);
 };
 
+exports.escapeOffset = function(offset) {
+    return "OFFSET " + resolveObjectType(offset);
+};
+
 /** Escapes the order by clause for queries
  *
  * @param table {string}: the table the field to order by should be on
  * @param field {string}: the field to order the query by
- * @param ascOrDesc {string]: indicates whether the field should be ordered by ascending or descending order. Must be the string 'asc' or 'desc' or their upper case versions
+ * @param ascOrDesc {string}: indicates whether the field should be ordered by ascending or descending order. Must be the string 'asc' or 'desc' or their upper case versions
  * @returns {string|undefined}: the escaped order by clause or undefined if the field or operator passed in is invalid
  */
 exports.escapeOrderBy = function(table, field, ascOrDesc) {
